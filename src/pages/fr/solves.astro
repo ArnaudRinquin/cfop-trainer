@@ -1,0 +1,34 @@
+---
+import Layout from '~/layouts/Layout.astro';
+import { createT } from '~/i18n/strings';
+import SolvesView from '~/components/SolvesView';
+
+const locale = 'fr';
+const t = createT(locale);
+---
+
+<Layout locale={locale} activeRoute="solves" title={t('solves.title')}>
+  <SolvesView
+    client:load
+    locale={locale}
+    strings={{
+      title: t('solves.title'),
+      subtitle: t('solves.subtitle'),
+      empty: t('solves.empty'),
+      newSolveLabel: t('buttons.newSolve'),
+      columns: {
+        number: t('solves.columns.number'),
+        time: t('solves.columns.time'),
+        scramble: t('solves.columns.scramble'),
+        date: t('solves.columns.date'),
+      },
+      stats: {
+        ao5: t('stats.ao5'),
+        ao12: t('stats.ao12'),
+        ao100: t('stats.ao100'),
+        best: t('stats.best'),
+        solves: t('stats.solves'),
+      },
+    }}
+  />
+</Layout>

@@ -1,0 +1,19 @@
+---
+import Layout from '~/layouts/Layout.astro';
+import AlgorithmsPage from '~/components/AlgorithmsPage.astro';
+import { ALG_GROUP_KEYS, type AlgGroupKey } from '~/data/algorithms';
+import { createT } from '~/i18n/strings';
+
+export function getStaticPaths() {
+  return ALG_GROUP_KEYS.map((tab) => ({ params: { tab } }));
+}
+
+const { tab } = Astro.params;
+const activeTab = tab as AlgGroupKey;
+const locale = 'fr';
+const t = createT(locale);
+---
+
+<Layout locale={locale} activeRoute="algorithms" title={t('algorithms.title')}>
+  <AlgorithmsPage locale={locale} activeTab={activeTab} />
+</Layout>

@@ -1,0 +1,22 @@
+---
+import Layout from '~/layouts/Layout.astro';
+import LessonPage from '~/components/LessonPage.astro';
+import { getCollection } from 'astro:content';
+
+export async function getStaticPaths() {
+  const all = await getCollection('lessons');
+  return all
+    .filter((entry) => entry.id.startsWith('en/'))
+    .map((entry) => {
+      const slug = entry.id.replace(/^en\//, '');
+      return { params: { slug }, props: { entry, slug } };
+    });
+}
+
+const { entry, slug } = Astro.props as { entry: import('astro:content').CollectionEntry<'lessons'>; slug: string };
+const locale = 'en';
+---
+
+<Layout locale={locale} activeRoute="lesson" title={entry.data.title}>
+  <LessonPage lesson={entry} locale={locale} slug={slug} />
+</Layout>

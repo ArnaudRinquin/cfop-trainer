@@ -1,0 +1,19 @@
+---
+title: 'PLL en 2-look : 6 algorithmes'
+eyebrow: 'Leçon 10'
+estimate: '30 min'
+goal: 'Terminer chaque résolution en deux étapes : coins puis arêtes.'
+practiceAlgs: '2look-pll-corners'
+practiceAlgs2: '2look-pll-edges'
+order: 10
+---
+
+Comme l’OLL 2-look, un cheval de bataille : 6 algorithmes couvrent les 21 cas PLL. Permutez d’abord les coins (2 algos), puis les arêtes (4 algos).
+
+### Permutation des coins
+
+Regardez les coins du dessus. Si deux coins adjacents partagent leur sticker non-jaune (« headlights »), c’est un A-perm. Sinon, c’est un E-perm (rare).
+
+### Permutation des arêtes
+
+Une fois les coins placés, il reste 4 cas pour les arêtes : U-perm (horaire), U-perm (anti-horaire), H-perm (échange opposé), Z-perm (échange adjacent).

@@ -1,0 +1,51 @@
+---
+import type { Locale } from '~/i18n/config';
+import { createT } from '~/i18n/strings';
+import { localePath } from '~/i18n/utils';
+import { ALG_GROUP_KEYS, getAlgorithmGroup, type AlgGroupKey } from '~/data/algorithms';
+import AlgorithmGroup from './AlgorithmGroup';
+
+interface Props {
+  locale: Locale;
+  activeTab: AlgGroupKey;
+}
+
+const { locale, activeTab } = Astro.props;
+const t = createT(locale);
+const algs = getAlgorithmGroup(activeTab, locale);
+const groupTitle = t(`algorithms.tabs.${activeTab}` as 'algorithms.tabs.oll-full');
+---
+
+<div class="mb-8">
+  <h1 class="font-display text-3xl sm:text-4xl font-semibold text-ink-50">
+    {t('algorithms.title')}
+  </h1>
+  <p class="text-ink-400 mt-2 max-w-2xl">{t('algorithms.description')}</p>
+</div>
+
+<div class="flex flex-wrap gap-1 mb-6">
+  {
+    ALG_GROUP_KEYS.map((key) => (
+      <a
+        href={localePath(`algorithms/${key}`, locale)}
+        class:list={['tab-button', { active: key === activeTab }]}
+      >
+        {t(`algorithms.tabs.${key}` as 'algorithms.tabs.oll-full')}
+      </a>
+    ))
+  }
+</div>
+
+<AlgorithmGroup
+  client:load
+  algs={algs}
+  title={groupTitle}
+  labels={{
+    learning: t('buttons.learning'),
+    mastered: t('buttons.mastered'),
+    masteredSuffix: t('algorithms.mastered'),
+    learningSuffix: t('algorithms.learning'),
+    untouchedSuffix: t('algorithms.untouched'),
+    algorithmsSuffix: t('algorithms.algorithmsSuffix'),
+  }}
+/>

@@ -1,0 +1,12 @@
+---
+import Layout from '~/layouts/Layout.astro';
+import AlgorithmsPage from '~/components/AlgorithmsPage.astro';
+import { createT } from '~/i18n/strings';
+
+const locale = 'fr';
+const t = createT(locale);
+---
+
+<Layout locale={locale} activeRoute="algorithms" title={t('algorithms.title')}>
+  <AlgorithmsPage locale={locale} activeTab="2look-oll-edges" />
+</Layout>

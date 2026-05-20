@@ -1,0 +1,35 @@
+---
+import { LOCALES, LOCALE_META, type Locale } from '~/i18n/config';
+import { switchLocale } from '~/i18n/utils';
+
+interface Props {
+  pathname: string;
+  locale: Locale;
+  label: string;
+}
+
+const { pathname, locale, label } = Astro.props;
+---
+
+<select
+  id="locale-picker"
+  data-pathname={pathname}
+  aria-label={label}
+  class="bg-ink-900 border border-white/10 text-ink-200 text-xs font-mono rounded-md px-2 py-1.5 hover:bg-ink-800 focus:outline-none focus:border-accent/50 transition-colors cursor-pointer"
+>
+  {
+    LOCALES.map((code) => (
+      <option value={switchLocale(pathname, code)} selected={code === locale}>
+        {LOCALE_META[code].short}
+      </option>
+    ))
+  }
+</select>
+
+<script>
+  const sel = document.getElementById('locale-picker') as HTMLSelectElement | null;
+  sel?.addEventListener('change', (e) => {
+    const target = (e.target as HTMLSelectElement).value;
+    window.location.href = target;
+  });
+</script>

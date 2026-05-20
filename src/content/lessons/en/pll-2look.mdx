@@ -1,0 +1,19 @@
+---
+title: '2-Look PLL: 6 algorithms'
+eyebrow: 'Lesson 10'
+estimate: '30 min'
+goal: 'Finish any solve in two look-ups: corners then edges.'
+practiceAlgs: '2look-pll-corners'
+practiceAlgs2: '2look-pll-edges'
+order: 10
+---
+
+Like 2-look OLL, this is a workhorse: 6 algorithms covering all 21 PLL cases. Permute corners first (2 algs), then edges (4 algs).
+
+### Corner permutation
+
+Look at the top layer corners. If two adjacent corners share their non-yellow sticker color ("headlights"), you have an A-perm. Otherwise it's an E-perm (rare).
+
+### Edge permutation
+
+Once corners are solved, you have 4 possible edge states: U-perm (clockwise), U-perm (counter), H-perm (opposite swap), or Z-perm (adjacent swap).

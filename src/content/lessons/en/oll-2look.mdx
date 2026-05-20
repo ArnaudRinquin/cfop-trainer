@@ -1,0 +1,19 @@
+---
+title: '2-Look OLL: 10 algorithms'
+eyebrow: 'Lesson 8'
+estimate: '40 min'
+goal: 'Yellow-face every solve using two short look-ups.'
+practiceAlgs: '2look-oll-edges'
+practiceAlgs2: '2look-oll-corners'
+order: 8
+---
+
+Full OLL is 57 algorithms. 2-Look OLL is 10. You handle edges first (3 cases) then corners (7 cases). It adds ~2s vs full OLL but you can learn it in an afternoon.
+
+### Step 1: orient edges (3 cases)
+
+You always end up in one of three states after F2L: _dot_ (no yellow edges), _line_, or _L_. Learn one algorithm for each.
+
+### Step 2: orient corners (7 cases)
+
+With the cross done, you have 7 possible corner orientations. The two you should master first are _Sune_ and _Anti-Sune_ — they appear most often.

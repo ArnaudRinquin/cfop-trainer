@@ -1,0 +1,76 @@
+---
+import type { Locale } from '~/i18n/config';
+import { createT } from '~/i18n/strings';
+import { localePath } from '~/i18n/utils';
+import LocaleSwitcher from './LocaleSwitcher.astro';
+import HeaderStats from './HeaderStats';
+import TimerLauncher from './TimerLauncher';
+
+interface Props {
+  locale: Locale;
+  pathname: string;
+  activeRoute: 'dashboard' | 'algorithms' | 'solves' | 'lesson';
+}
+
+const { locale, pathname, activeRoute } = Astro.props;
+const t = createT(locale);
+
+const navItems = [
+  { route: 'dashboard', label: t('nav.curriculum'), href: localePath('', locale) },
+  { route: 'algorithms', label: t('nav.algorithms'), href: localePath('algorithms', locale) },
+  { route: 'solves', label: t('nav.solves'), href: localePath('solves', locale) },
+];
+
+const homeHref = localePath('', locale);
+---
+
+<header class="border-b border-white/5 backdrop-blur-md bg-ink-950/60 sticky top-0 z-30">
+  <div class="max-w-7xl mx-auto px-5 sm:px-8 py-3 flex items-center justify-between gap-6">
+    <a href={homeHref} class="flex items-center gap-2.5 group">
+      <div class="w-8 h-8 rounded-md overflow-hidden grid grid-cols-2 grid-rows-2 gap-px bg-black/60 p-px">
+        <div class="bg-cube-yellow"></div>
+        <div class="bg-cube-red"></div>
+        <div class="bg-cube-green"></div>
+        <div class="bg-cube-blue"></div>
+      </div>
+      <div class="font-display font-semibold tracking-tight text-ink-50">CFOP</div>
+      <div class="text-ink-500 text-xs uppercase tracking-widest hidden sm:block">
+        {t('app.tagline')}
+      </div>
+    </a>
+    <nav class="flex items-center gap-1">
+      {
+        navItems.map((item) => (
+          <a
+            href={item.href}
+            class:list={['tab-button', { active: item.route === activeRoute || (item.route === 'dashboard' && activeRoute === 'lesson') }]}
+          >
+            {item.label}
+          </a>
+        ))
+      }
+    </nav>
+    <div class="flex items-center gap-3">
+      <HeaderStats
+        client:load
+        labels={{ ao5: t('stats.ao5'), ao12: t('stats.ao12'), best: t('stats.best') }}
+      />
+      <LocaleSwitcher pathname={pathname} locale={locale} label={t('language.label')} />
+      <TimerLauncher
+        client:load
+        variant="header"
+        strings={{
+          pressHold: t('timer.pressHold'),
+          holding: t('timer.holding'),
+          ready: t('timer.ready'),
+          solving: t('timer.solving'),
+          scrambleLabel: t('timer.scrambleLabel'),
+          spaceHint: t('timer.spaceHint'),
+          newScrambleHint: t('timer.newScrambleHint'),
+          closeHint: t('timer.closeHint'),
+          timerButton: t('buttons.timer'),
+        }}
+      />
+    </div>
+  </div>
+</header>

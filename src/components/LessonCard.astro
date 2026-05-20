@@ -1,0 +1,52 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import type { Locale } from '~/i18n/config';
+import { createT } from '~/i18n/strings';
+import { localePath } from '~/i18n/utils';
+import LessonCardStatus from './LessonCardStatus';
+import LessonCardChip from './LessonCardChip';
+
+interface Props {
+  lesson: CollectionEntry<'lessons'>;
+  locale: Locale;
+  slug: string;
+}
+
+const { lesson, locale, slug } = Astro.props;
+const t = createT(locale);
+const numberMatch = lesson.data.eyebrow?.match(/\d+/)?.[0] ?? '·';
+const href = localePath(`lesson/${slug}`, locale);
+---
+
+<a href={href} class="card card-hover block p-4 group">
+  <div class="flex items-start gap-4">
+    <LessonCardStatus client:load lessonId={slug} number={numberMatch} />
+    <div class="flex-1 min-w-0">
+      <div class="flex items-baseline gap-2">
+        <div class="font-display font-semibold text-ink-50 group-hover:text-accent transition-colors truncate">
+          {lesson.data.title}
+        </div>
+      </div>
+      <div class="text-ink-400 text-sm mt-1 line-clamp-2">{lesson.data.goal}</div>
+      <div class="flex items-center gap-3 mt-2 text-[11px] text-ink-500">
+        <span>{lesson.data.estimate}</span>
+        {lesson.data.practiceAlgs && <span class="chip">{t('lesson.algDrill')}</span>}
+        <LessonCardChip client:load lessonId={slug} label={t('lesson.completed')} />
+      </div>
+    </div>
+    <svg
+      class="text-ink-400 group-hover:text-accent group-hover:translate-x-1 transition-all shrink-0 mt-1"
+      width="20"
+      height="20"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    >
+      <path d="M5 12h14"></path>
+      <path d="m12 5 7 7-7 7"></path>
+    </svg>
+  </div>
+</a>

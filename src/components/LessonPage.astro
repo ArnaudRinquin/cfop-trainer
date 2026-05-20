@@ -1,0 +1,199 @@
+---
+import { render } from 'astro:content';
+import type { CollectionEntry } from 'astro:content';
+import type { Locale } from '~/i18n/config';
+import { createT } from '~/i18n/strings';
+import { localePath } from '~/i18n/utils';
+import { getStageByLessonSlug, flatLessonSlugs } from '~/data/stages';
+import { getAlgorithmGroup, type AlgGroupKey } from '~/data/algorithms';
+import { getLessonsByLocale } from '~/lib/content';
+import LessonCompleteButton from './LessonCompleteButton';
+import AlgorithmGroup from './AlgorithmGroup';
+
+interface Props {
+  lesson: CollectionEntry<'lessons'>;
+  locale: Locale;
+  slug: string;
+}
+
+const { lesson, locale, slug } = Astro.props;
+const t = createT(locale);
+
+const stage = getStageByLessonSlug(slug, locale);
+const lessonMap = await getLessonsByLocale(locale);
+
+// Sibling lessons in the same stage, in order.
+const stageLessons = (stage?.lessons ?? []).flatMap((s) => {
+  const entry = lessonMap.get(s);
+  return entry ? [{ slug: s, entry }] : [];
+});
+
+// Flat order across the whole curriculum, for prev/next.
+const flatSlugs = flatLessonSlugs();
+const flatIdx = flatSlugs.indexOf(slug);
+const prevSlug = flatIdx > 0 ? flatSlugs[flatIdx - 1] : null;
+const nextSlug = flatIdx < flatSlugs.length - 1 ? flatSlugs[flatIdx + 1] : null;
+const prevEntry = prevSlug ? lessonMap.get(prevSlug) : null;
+const nextEntry = nextSlug ? lessonMap.get(nextSlug) : null;
+
+// Practice algorithm groups (zero, one, or two).
+const algGroupKeys: AlgGroupKey[] = [];
+if (lesson.data.practiceAlgs) algGroupKeys.push(lesson.data.practiceAlgs as AlgGroupKey);
+if (lesson.data.practiceAlgs2) algGroupKeys.push(lesson.data.practiceAlgs2 as AlgGroupKey);
+
+const algLabels = {
+  learning: t('buttons.learning'),
+  mastered: t('buttons.mastered'),
+  masteredSuffix: t('algorithms.mastered'),
+  learningSuffix: t('algorithms.learning'),
+  untouchedSuffix: t('algorithms.untouched'),
+  algorithmsSuffix: t('algorithms.algorithmsSuffix'),
+};
+
+// Render the MDX body now so we can drop the HTML inside `.prose-cfop`.
+const { Content } = await render(lesson);
+---
+
+<div class="grid grid-cols-1 lg:grid-cols-[260px_1fr] gap-10">
+  <aside class="lg:sticky lg:top-20 self-start">
+    <a
+      href={localePath('', locale)}
+      class="text-ink-400 hover:text-ink-100 text-xs inline-flex items-center gap-1 mb-6"
+    >
+      <svg
+        width="14"
+        height="14"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <path d="m12 19-7-7 7-7"></path>
+        <path d="M19 12H5"></path>
+      </svg>
+      {t('lesson.allLessons')}
+    </a>
+    {
+      stage && (
+        <Fragment>
+          <div class="flex items-center gap-2 mb-4">
+            <div class="w-2 h-2 rounded-full" style={`background:${stage.color};`} />
+            <div class="font-display font-semibold text-ink-50 text-sm">{stage.title}</div>
+          </div>
+          <ol class="space-y-1">
+            {stageLessons.map(({ slug: s, entry }) => (
+              <li>
+                <a
+                  href={localePath(`lesson/${s}`, locale)}
+                  class:list={[
+                    'block px-3 py-2 rounded-md text-sm',
+                    s === slug
+                      ? 'bg-white/5 text-ink-50'
+                      : 'text-ink-400 hover:text-ink-100 hover:bg-white/5',
+                  ]}
+                >
+                  <span class="truncate">{entry.data.title}</span>
+                </a>
+              </li>
+            ))}
+          </ol>
+        </Fragment>
+      )
+    }
+  </aside>
+
+  <article>
+    <div class="text-ink-500 text-xs uppercase tracking-widest mb-2">
+      {lesson.data.eyebrow || stage?.title} &middot; {lesson.data.estimate}
+    </div>
+    <h1 class="font-display text-3xl sm:text-4xl font-semibold text-ink-50 leading-tight mb-4">
+      {lesson.data.title}
+    </h1>
+    <div class="text-ink-300 text-lg max-w-2xl">{lesson.data.goal}</div>
+
+    <div class="prose-cfop mt-8 max-w-2xl">
+      <Content />
+    </div>
+
+    {
+      algGroupKeys.length > 0 && (
+        <section class="mt-12">
+          <h2 class="font-display text-xl text-ink-50 mb-2">{t('lesson.practiceAlgs')}</h2>
+          <p
+            class="text-ink-400 text-sm mb-6 max-w-2xl"
+            set:html={t('lesson.practiceHint')}
+          />
+          {algGroupKeys.map((key) => (
+            <div class="mb-8">
+              <AlgorithmGroup
+                client:load
+                algs={getAlgorithmGroup(key, locale)}
+                title={t(`algorithms.tabs.${key}` as 'algorithms.tabs.oll-full')}
+                labels={algLabels}
+              />
+            </div>
+          ))}
+        </section>
+      )
+    }
+
+    <section class="mt-12 pt-8 border-t border-white/5 flex flex-wrap items-center gap-3">
+      <LessonCompleteButton
+        client:load
+        lessonId={slug}
+        markLabel={t('buttons.markComplete')}
+        completedLabel={t('buttons.completed')}
+      />
+      {
+        prevEntry && (
+          <a
+            href={localePath(`lesson/${prevSlug}`, locale)}
+            class="text-sm text-ink-400 hover:text-ink-100 ml-auto inline-flex items-center gap-1"
+          >
+            <svg
+              width="14"
+              height="14"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="m12 19-7-7 7-7" />
+            </svg>
+            {prevEntry.data.title}
+          </a>
+        )
+      }
+      {
+        nextEntry && (
+          <a
+            href={localePath(`lesson/${nextSlug}`, locale)}
+            class:list={[
+              'text-sm text-accent hover:text-accent-hover inline-flex items-center gap-1',
+              { 'ml-auto': !prevEntry },
+            ]}
+          >
+            {t('lesson.next', { title: nextEntry.data.title })}
+            <svg
+              width="14"
+              height="14"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="M5 12h14" />
+              <path d="m12 5 7 7-7 7" />
+            </svg>
+          </a>
+        )
+      }
+    </section>
+  </article>
+</div>

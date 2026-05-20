@@ -1,0 +1,134 @@
+---
+import type { Locale } from '~/i18n/config';
+import { createT } from '~/i18n/strings';
+import { localePath } from '~/i18n/utils';
+import { getStages, flatLessonSlugs } from '~/data/stages';
+import { getLessonsByLocale } from '~/lib/content';
+import LessonCard from './LessonCard.astro';
+import StageProgress from './StageProgress';
+import DashboardProgress from './DashboardProgress';
+import NextLessonButton from './NextLessonButton';
+import TimerLauncher from './TimerLauncher';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = createT(locale);
+
+const stages = getStages(locale);
+const lessonMap = await getLessonsByLocale(locale);
+const allSlugs = flatLessonSlugs();
+
+// Pick the lesson to feature in the hero. Server can't know completion state,
+// so we default to the first lesson; the client-side button label adapts.
+const heroSlug = allSlugs[0];
+const heroLesson = heroSlug ? lessonMap.get(heroSlug) : undefined;
+
+const totalLessons = allSlugs.length;
+---
+
+<section class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-12">
+  <div class="lg:col-span-2 card p-8 relative overflow-hidden">
+    <div
+      class="absolute inset-0 pointer-events-none opacity-30"
+      style="background: radial-gradient(600px 200px at 20% 0%, rgba(163, 230, 53, 0.25), transparent 60%);"
+    >
+    </div>
+    <div class="relative">
+      <div class="text-ink-400 text-xs uppercase tracking-widest mb-3">
+        {t('dashboard.pickUpWhere')}
+      </div>
+      {
+        heroLesson && (
+          <Fragment>
+            <h1 class="font-display text-3xl sm:text-4xl font-semibold text-ink-50 mb-2 leading-tight">
+              {heroLesson.data.title}
+            </h1>
+            <p class="text-ink-300 max-w-2xl">{heroLesson.data.goal}</p>
+            <div class="flex flex-wrap gap-3 mt-6">
+              <NextLessonButton
+                client:load
+                lessonHref={localePath(`lesson/${heroSlug}`, locale)}
+                lessonId={heroSlug}
+                continueLabel={t('buttons.continue')}
+                reviewLabel={t('buttons.review')}
+              />
+              <TimerLauncher
+                client:load
+                variant="hero"
+                strings={{
+                  pressHold: t('timer.pressHold'),
+                  holding: t('timer.holding'),
+                  ready: t('timer.ready'),
+                  solving: t('timer.solving'),
+                  scrambleLabel: t('timer.scrambleLabel'),
+                  spaceHint: t('timer.spaceHint'),
+                  newScrambleHint: t('timer.newScrambleHint'),
+                  closeHint: t('timer.closeHint'),
+                  timerButton: t('buttons.practiceTimer'),
+                }}
+              />
+            </div>
+          </Fragment>
+        )
+      }
+    </div>
+  </div>
+
+  <DashboardProgress
+    client:load
+    totalLessons={totalLessons}
+    allLessonIds={allSlugs}
+    labels={{
+      yourProgress: t('dashboard.yourProgress'),
+      lessonsSuffix: t('dashboard.lessonsSuffix'),
+      solves: t('stats.solves'),
+      ao5: t('stats.ao5'),
+      noAo: t('dashboard.noAo'),
+    }}
+  />
+</section>
+
+<section>
+  <div class="flex items-baseline justify-between mb-6">
+    <h2 class="font-display text-xl text-ink-50">{t('dashboard.curriculumTitle')}</h2>
+    <div class="text-xs text-ink-500">
+      {
+        t('dashboard.stagesAndLessons', {
+          stages: stages.length,
+          lessons: totalLessons,
+        })
+      }
+    </div>
+  </div>
+
+  <div class="space-y-10">
+    {
+      stages.map((stage) => {
+        const stageLessons = stage.lessons.flatMap((slug) => {
+          const entry = lessonMap.get(slug);
+          return entry ? [{ slug, entry }] : [];
+        });
+        return (
+          <div>
+            <div class="flex items-baseline gap-3 mb-1">
+              <div class="w-2.5 h-2.5 rounded-full" style={`background:${stage.color};`}></div>
+              <h3 class="font-display text-lg text-ink-50">{stage.title}</h3>
+              <div class="text-ink-400 text-sm">{stage.summary}</div>
+              <div class="ml-auto">
+                <StageProgress client:load lessonIds={stage.lessons} />
+              </div>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mt-4">
+              {stageLessons.map(({ slug, entry }) => (
+                <LessonCard lesson={entry} locale={locale} slug={slug} />
+              ))}
+            </div>
+          </div>
+        );
+      })
+    }
+  </div>
+</section>

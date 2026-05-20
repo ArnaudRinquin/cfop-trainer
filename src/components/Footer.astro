@@ -1,0 +1,30 @@
+---
+import type { Locale } from '~/i18n/config';
+import { createT } from '~/i18n/strings';
+import DataManagement from './DataManagement';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = createT(locale);
+---
+
+<footer class="border-t border-white/5 py-6 mt-12">
+  <div
+    class="max-w-7xl mx-auto px-5 sm:px-8 flex flex-wrap items-center justify-between gap-4 text-xs text-ink-500"
+  >
+    <div>{t('app.footer')}</div>
+    <DataManagement
+      client:load
+      labels={{
+        exportProgress: t('buttons.exportProgress'),
+        importProgress: t('buttons.importProgress'),
+        reset: t('buttons.reset'),
+        confirmReset: t('alerts.confirmReset'),
+        importFailed: t('alerts.importFailed'),
+      }}
+    />
+  </div>
+</footer>
