@@ -18,11 +18,14 @@ import {
   importData,
   resetAll,
 } from './state.js';
+import { t, setLocale, getLocale } from './i18n.js';
 
 const root = document.getElementById('app');
+let lastRouteKey = '';
 
 function render() {
   const route = parseRoute();
+  const routeKey = [route.name, ...route.params].join('/');
   let content;
   let activeRoute = route.name;
 
@@ -52,9 +55,14 @@ function render() {
       content = html`<div class="text-ink-400 py-12 text-center">Page not found. <a href="#/dashboard" class="link-underline">Back to dashboard</a></div>`;
   }
 
+  document.documentElement.lang = getLocale();
   mount(root, shell({ activeRoute, content }));
   attachHandlers(route);
-  window.scrollTo({ top: 0, behavior: 'instant' });
+
+  if (routeKey !== lastRouteKey) {
+    window.scrollTo({ top: 0, behavior: 'instant' });
+    lastRouteKey = routeKey;
+  }
 }
 
 function attachHandlers(route) {
@@ -62,6 +70,11 @@ function attachHandlers(route) {
   document.getElementById('open-timer')?.addEventListener('click', openTimer);
   document.getElementById('hero-open-timer')?.addEventListener('click', openTimer);
   document.getElementById('open-timer-solves')?.addEventListener('click', openTimer);
+
+  // Locale picker
+  document.getElementById('locale-picker')?.addEventListener('change', (e) => {
+    setLocale(e.target.value);
+  });
 
   // Algorithm mastery toggles (delegated to clicks on .alg-toggle within view)
   document.querySelectorAll('.alg-toggle').forEach((btn) => {
@@ -119,13 +132,13 @@ function attachHandlers(route) {
         const text = await file.text();
         importData(text);
       } catch (err) {
-        alert('Import failed: ' + err.message);
+        alert(t('alerts.importFailed', { message: err.message }));
       }
     };
     input.click();
   });
   document.getElementById('reset-data')?.addEventListener('click', () => {
-    if (confirm('Wipe all progress, algorithms and solves? This cannot be undone.')) {
+    if (confirm(t('alerts.confirmReset'))) {
       resetAll();
     }
   });

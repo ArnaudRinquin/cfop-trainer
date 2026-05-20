@@ -1,12 +1,13 @@
 // Algorithm library: 2-look OLL/PLL, full OLL, full PLL, common F2L cases.
-// Algorithms use standard speedcubing notation.
+// Algorithms (notation strings) are universal. Names like Sune / T-perm are
+// also universal cuber vocabulary — we only translate descriptive patterns.
+import { tr, localize } from '../i18n.js';
 
-// 2-Look OLL (10 algs) - learn first
-export const ollTwoLookEdges = [
+const ollTwoLookEdges = [
   {
     id: 'oll-2l-edge-dot',
-    name: 'Dot (no edges)',
-    pattern: 'No yellow edges oriented on top',
+    name: tr('Dot (no edges)', 'Point (aucune arête)'),
+    pattern: tr('No yellow edges oriented on top', 'Aucune arête jaune orientée en haut'),
     alg: "F (R U R' U') F' f (R U R' U') f'",
     sticker: [
       ['X', 'X', 'X'],
@@ -16,8 +17,8 @@ export const ollTwoLookEdges = [
   },
   {
     id: 'oll-2l-edge-line',
-    name: 'Line',
-    pattern: 'Horizontal yellow bar across the top',
+    name: tr('Line', 'Ligne'),
+    pattern: tr('Horizontal yellow bar across the top', 'Barre jaune horizontale sur le dessus'),
     alg: "F (R U R' U') F'",
     sticker: [
       ['X', 'X', 'X'],
@@ -27,8 +28,8 @@ export const ollTwoLookEdges = [
   },
   {
     id: 'oll-2l-edge-l',
-    name: 'L-shape',
-    pattern: 'Two adjacent edges form an L',
+    name: tr('L-shape', 'L'),
+    pattern: tr('Two adjacent edges form an L', 'Deux arêtes adjacentes forment un L'),
     alg: "f (R U R' U') f'",
     sticker: [
       ['X', 'Y', 'X'],
@@ -38,11 +39,11 @@ export const ollTwoLookEdges = [
   },
 ];
 
-export const ollTwoLookCorners = [
+const ollTwoLookCorners = [
   {
     id: 'oll-2l-corner-sune',
-    name: 'Sune',
-    pattern: 'One corner oriented, others form a Sune pattern',
+    name: tr('Sune', 'Sune'),
+    pattern: tr('One corner oriented, others form a Sune pattern', 'Un coin orienté, les autres en motif Sune'),
     alg: "R U R' U R U2 R'",
     sticker: [
       ['Y', 'X', 'X'],
@@ -52,8 +53,8 @@ export const ollTwoLookCorners = [
   },
   {
     id: 'oll-2l-corner-antisune',
-    name: 'Anti-Sune',
-    pattern: 'Mirror of Sune',
+    name: tr('Anti-Sune', 'Anti-Sune'),
+    pattern: tr('Mirror of Sune', 'Miroir du Sune'),
     alg: "R U2 R' U' R U' R'",
     sticker: [
       ['X', 'X', 'Y'],
@@ -63,8 +64,8 @@ export const ollTwoLookCorners = [
   },
   {
     id: 'oll-2l-corner-headlights',
-    name: 'Headlights',
-    pattern: 'Two corners on the same side oriented',
+    name: tr('Headlights', 'Headlights'),
+    pattern: tr('Two corners on the same side oriented', 'Deux coins orientés du même côté'),
     alg: "R2 D R' U2 R D' R' U2 R'",
     sticker: [
       ['Y', 'X', 'Y'],
@@ -74,8 +75,8 @@ export const ollTwoLookCorners = [
   },
   {
     id: 'oll-2l-corner-pi',
-    name: 'Pi (bowtie)',
-    pattern: 'Two corners diagonally facing front/back',
+    name: tr('Pi (bowtie)', 'Pi (nœud papillon)'),
+    pattern: tr('Two corners diagonally facing front/back', 'Deux coins en diagonale devant/derrière'),
     alg: "R U2 R' U' R U R' U' R U' R'",
     sticker: [
       ['X', 'Y', 'X'],
@@ -85,8 +86,8 @@ export const ollTwoLookCorners = [
   },
   {
     id: 'oll-2l-corner-u',
-    name: 'U (chameleon)',
-    pattern: 'Two opposite corners oriented',
+    name: tr('U (chameleon)', 'U (caméléon)'),
+    pattern: tr('Two opposite corners oriented', 'Deux coins opposés orientés'),
     alg: "F (R U R' U') (R U R' U') F'",
     sticker: [
       ['X', 'X', 'X'],
@@ -96,8 +97,8 @@ export const ollTwoLookCorners = [
   },
   {
     id: 'oll-2l-corner-t',
-    name: 'T',
-    pattern: 'Two adjacent corners oriented (back)',
+    name: tr('T', 'T'),
+    pattern: tr('Two adjacent corners oriented (back)', 'Deux coins adjacents orientés (arrière)'),
     alg: "r U R' U' r' F R F'",
     sticker: [
       ['X', 'Y', 'X'],
@@ -107,8 +108,8 @@ export const ollTwoLookCorners = [
   },
   {
     id: 'oll-2l-corner-h',
-    name: 'H (cross)',
-    pattern: 'No corners oriented, all edges form plus',
+    name: tr('H (cross)', 'H (croix)'),
+    pattern: tr('No corners oriented, all edges form plus', 'Aucun coin orienté, toutes les arêtes forment une croix'),
     alg: "F (R U R' U')(R U R' U')(R U R' U') F'",
     sticker: [
       ['X', 'Y', 'X'],
@@ -118,84 +119,82 @@ export const ollTwoLookCorners = [
   },
 ];
 
-// 2-Look PLL (6 algs)
-export const pllTwoLookCorners = [
+const pllTwoLookCorners = [
   {
     id: 'pll-2l-aa',
-    name: 'Aa-perm (corner 3-cycle)',
-    pattern: 'Cycle three corners counterclockwise',
+    name: tr('Aa-perm (corner 3-cycle)', 'Aa-perm (3-cycle de coins)'),
+    pattern: tr('Cycle three corners counterclockwise', 'Cycle de trois coins, anti-horaire'),
     alg: "x R' U R' D2 R U' R' D2 R2 x'",
   },
   {
     id: 'pll-2l-ae',
-    name: 'E-perm (diagonal corner swap)',
-    pattern: 'Two diagonal pairs of corners swapped',
+    name: tr('E-perm (diagonal corner swap)', 'E-perm (échange diagonal de coins)'),
+    pattern: tr('Two diagonal pairs of corners swapped', 'Deux paires de coins en diagonale échangées'),
     alg: "x' R U' R' D R U R' D' R U R' D R U' R' D' x",
   },
 ];
 
-export const pllTwoLookEdges = [
+const pllTwoLookEdges = [
   {
     id: 'pll-2l-ua',
-    name: 'Ua-perm (edge 3-cycle)',
-    pattern: 'Cycle three edges (UFR pointer)',
+    name: tr('Ua-perm (edge 3-cycle)', 'Ua-perm (3-cycle d’arêtes)'),
+    pattern: tr('Cycle three edges (UFR pointer)', 'Cycle de trois arêtes (pointeur UFR)'),
     alg: "R U' R U R U R U' R' U' R2",
   },
   {
     id: 'pll-2l-ub',
-    name: 'Ub-perm (edge 3-cycle mirror)',
-    pattern: 'Cycle three edges the other way',
+    name: tr('Ub-perm (edge 3-cycle mirror)', 'Ub-perm (miroir du Ua)'),
+    pattern: tr('Cycle three edges the other way', 'Cycle de trois arêtes dans l’autre sens'),
     alg: "R2 U R U R' U' R' U' R' U R'",
   },
   {
     id: 'pll-2l-h',
-    name: 'H-perm (edge swap opposite)',
-    pattern: 'Swap front+back edges and left+right edges',
+    name: tr('H-perm (edge swap opposite)', 'H-perm (échange d’arêtes opposées)'),
+    pattern: tr('Swap front+back edges and left+right edges', 'Échange avant+arrière et gauche+droite'),
     alg: "M2 U M2 U2 M2 U M2",
   },
   {
     id: 'pll-2l-z',
-    name: 'Z-perm (adjacent edge swap)',
-    pattern: 'Swap two pairs of adjacent edges',
+    name: tr('Z-perm (adjacent edge swap)', 'Z-perm (échange d’arêtes adjacentes)'),
+    pattern: tr('Swap two pairs of adjacent edges', 'Échange de deux paires d’arêtes adjacentes'),
     alg: "M2 U M2 U M' U2 M2 U2 M'",
   },
 ];
 
-// Beginner / intuitive F2L pairs (4 most common slot-insertion cases)
-export const f2lBasic = [
+const f2lBasic = [
   {
     id: 'f2l-1',
-    name: 'Pair already made — slot it in',
-    pattern: 'Corner+edge pair sits in the top, slot is empty',
+    name: tr('Pair already made — slot it in', 'Paire déjà formée — insérez'),
+    pattern: tr('Corner+edge pair sits in the top, slot is empty', 'Paire coin+arête sur le dessus, slot vide'),
     alg: "U R U' R'",
-    note: 'When pair is on the right above its slot',
+    note: tr('When pair is on the right above its slot', 'Quand la paire est à droite, au-dessus de son slot'),
   },
   {
     id: 'f2l-2',
-    name: 'Pair on the left',
-    pattern: 'Pair sits above its slot on the left side',
+    name: tr('Pair on the left', 'Paire à gauche'),
+    pattern: tr('Pair sits above its slot on the left side', 'La paire est au-dessus de son slot, à gauche'),
     alg: "U' L' U L",
-    note: 'Mirror of slot-1 insertion',
+    note: tr('Mirror of slot-1 insertion', 'Miroir de l’insertion du slot 1'),
   },
   {
     id: 'f2l-3',
-    name: 'Corner on top, edge on top — same side',
-    pattern: 'White corner and the edge both on top, easy join',
+    name: tr('Corner on top, edge on top — same side', 'Coin et arête sur le dessus — même côté'),
+    pattern: tr('White corner and the edge both on top, easy join', 'Coin blanc et arête tous les deux sur le dessus, jonction facile'),
     alg: "U R U' R' U' F' U F",
-    note: 'Build pair then insert',
+    note: tr('Build pair then insert', 'Formez la paire puis insérez'),
   },
   {
     id: 'f2l-4',
-    name: 'Edge in slot wrong, corner on top',
-    pattern: 'Need to extract edge then rejoin',
+    name: tr('Edge in slot wrong, corner on top', 'Arête mal placée dans le slot, coin sur le dessus'),
+    pattern: tr('Need to extract edge then rejoin', 'Extraire l’arête puis la réassembler'),
     alg: "R U' R' U F' U' F",
-    note: 'Common situation — practice extraction',
+    note: tr('Common situation — practice extraction', 'Cas fréquent — pratiquez l’extraction'),
   },
 ];
 
-// Full OLL (compact). I include the 57 cases with name and proven algorithm.
-// (Stickers omitted for full-OLL list to keep file manageable; trainer can still test alg recall.)
-export const ollFull = [
+// Full OLL (57) — only patterns translated; the names are nicknames cubers use
+// in English worldwide.
+const ollFull = [
   { id: 'OLL01', name: 'Dot 01', alg: "(R U2)(R'2 F R F') U2 (R' F R F')" },
   { id: 'OLL02', name: 'Dot 02', alg: "F (R U R' U') F' f (R U R' U') f'" },
   { id: 'OLL03', name: 'Dot 03', alg: "f (R U R' U') f' U' F (R U R' U') F'" },
@@ -255,38 +254,49 @@ export const ollFull = [
   { id: 'OLL57', name: 'Cross 57 (H)', alg: "(R U R' U') M' (U R U' r')" },
 ];
 
-// Full PLL (21 cases)
-export const pllFull = [
-  { id: 'Aa', name: 'Aa-perm', pattern: 'Corner 3-cycle (CCW)', alg: "x R' U R' D2 R U' R' D2 R2 x'" },
-  { id: 'Ab', name: 'Ab-perm', pattern: 'Corner 3-cycle (CW)', alg: "x R2 D2 R U R' D2 R U' R x'" },
-  { id: 'E',  name: 'E-perm', pattern: 'Diagonal corner swap', alg: "x' R U' R' D R U R' D' R U R' D R U' R' D'" },
-  { id: 'F',  name: 'F-perm', pattern: 'Adjacent corner swap + edge', alg: "R' U' F' R U R' U' R' F R2 U' R' U' R U R' U R" },
-  { id: 'Ga', name: 'Ga-perm', pattern: '3-cycle corners & 3-cycle edges', alg: "R2 U R' U R' U' R U' R2 U' D R' U R D'" },
-  { id: 'Gb', name: 'Gb-perm', pattern: '3-cycle corners & 3-cycle edges (mirror)', alg: "R' U' R U D' R2 U R' U R U' R U' R2 D" },
-  { id: 'Gc', name: 'Gc-perm', pattern: '3-cycle corners & 3-cycle edges', alg: "R2 U' R U' R U R' U R2 U D' R U' R' D" },
-  { id: 'Gd', name: 'Gd-perm', pattern: '3-cycle corners & 3-cycle edges', alg: "R U R' U' D R2 U' R U' R' U R' U R2 D'" },
-  { id: 'H',  name: 'H-perm', pattern: 'Opposite edge swap', alg: "M2 U M2 U2 M2 U M2" },
-  { id: 'Ja', name: 'Ja-perm', pattern: 'Adjacent corner+edge swap', alg: "x R2 F R F' R U2 r' U r U2 x'" },
-  { id: 'Jb', name: 'Jb-perm', pattern: 'Adjacent corner+edge swap (mirror)', alg: "R U R' F' R U R' U' R' F R2 U' R'" },
-  { id: 'Na', name: 'Na-perm', pattern: 'Diagonal corner+edge swap', alg: "R U R' U R U R' F' R U R' U' R' F R2 U' R' U2 R U' R'" },
-  { id: 'Nb', name: 'Nb-perm', pattern: 'Diagonal corner+edge swap (mirror)', alg: "R' U R U' R' F' U' F R U R' F R' F' R U' R" },
-  { id: 'Ra', name: 'Ra-perm', pattern: '3-corner cycle + edge swap', alg: "R U' R' U' R U R D R' U' R D' R' U2 R'" },
-  { id: 'Rb', name: 'Rb-perm', pattern: '3-corner cycle + edge swap (mirror)', alg: "R2 F R U R U' R' F' R U2 R' U2 R" },
-  { id: 'T',  name: 'T-perm', pattern: 'Adjacent corner+edge swap, the classic', alg: "R U R' U' R' F R2 U' R' U' R U R' F'" },
-  { id: 'Ua', name: 'Ua-perm', pattern: 'Edge 3-cycle CCW', alg: "R U' R U R U R U' R' U' R2" },
-  { id: 'Ub', name: 'Ub-perm', pattern: 'Edge 3-cycle CW', alg: "R2 U R U R' U' R' U' R' U R'" },
-  { id: 'V',  name: 'V-perm', pattern: 'Diagonal corner + adjacent edge swap', alg: "R' U R' U' y R' F' R2 U' R' U R' F R F" },
-  { id: 'Y',  name: 'Y-perm', pattern: 'Diagonal corner + opposite edge swap', alg: "F R U' R' U' R U R' F' R U R' U' R' F R F'" },
-  { id: 'Z',  name: 'Z-perm', pattern: 'Adjacent edge double-swap', alg: "M2 U M2 U M' U2 M2 U2 M'" },
+// Full PLL (21) - names universal; patterns translated.
+const pllFull = [
+  { id: 'Aa', name: 'Aa-perm', pattern: tr('Corner 3-cycle (CCW)', '3-cycle de coins (anti-horaire)'), alg: "x R' U R' D2 R U' R' D2 R2 x'" },
+  { id: 'Ab', name: 'Ab-perm', pattern: tr('Corner 3-cycle (CW)', '3-cycle de coins (horaire)'), alg: "x R2 D2 R U R' D2 R U' R x'" },
+  { id: 'E',  name: 'E-perm', pattern: tr('Diagonal corner swap', 'Échange diagonal de coins'), alg: "x' R U' R' D R U R' D' R U R' D R U' R' D'" },
+  { id: 'F',  name: 'F-perm', pattern: tr('Adjacent corner swap + edge', 'Échange de coins adjacents + arête'), alg: "R' U' F' R U R' U' R' F R2 U' R' U' R U R' U R" },
+  { id: 'Ga', name: 'Ga-perm', pattern: tr('3-cycle corners & 3-cycle edges', '3-cycle de coins + 3-cycle d’arêtes'), alg: "R2 U R' U R' U' R U' R2 U' D R' U R D'" },
+  { id: 'Gb', name: 'Gb-perm', pattern: tr('3-cycle corners & 3-cycle edges (mirror)', '3-cycle de coins + 3-cycle d’arêtes (miroir)'), alg: "R' U' R U D' R2 U R' U R U' R U' R2 D" },
+  { id: 'Gc', name: 'Gc-perm', pattern: tr('3-cycle corners & 3-cycle edges', '3-cycle de coins + 3-cycle d’arêtes'), alg: "R2 U' R U' R U R' U R2 U D' R U' R' D" },
+  { id: 'Gd', name: 'Gd-perm', pattern: tr('3-cycle corners & 3-cycle edges', '3-cycle de coins + 3-cycle d’arêtes'), alg: "R U R' U' D R2 U' R U' R' U R' U R2 D'" },
+  { id: 'H',  name: 'H-perm', pattern: tr('Opposite edge swap', 'Échange d’arêtes opposées'), alg: "M2 U M2 U2 M2 U M2" },
+  { id: 'Ja', name: 'Ja-perm', pattern: tr('Adjacent corner+edge swap', 'Échange coin+arête adjacents'), alg: "x R2 F R F' R U2 r' U r U2 x'" },
+  { id: 'Jb', name: 'Jb-perm', pattern: tr('Adjacent corner+edge swap (mirror)', 'Échange coin+arête adjacents (miroir)'), alg: "R U R' F' R U R' U' R' F R2 U' R'" },
+  { id: 'Na', name: 'Na-perm', pattern: tr('Diagonal corner+edge swap', 'Échange diagonal coin+arête'), alg: "R U R' U R U R' F' R U R' U' R' F R2 U' R' U2 R U' R'" },
+  { id: 'Nb', name: 'Nb-perm', pattern: tr('Diagonal corner+edge swap (mirror)', 'Échange diagonal coin+arête (miroir)'), alg: "R' U R U' R' F' U' F R U R' F R' F' R U' R" },
+  { id: 'Ra', name: 'Ra-perm', pattern: tr('3-corner cycle + edge swap', '3-cycle de coins + échange d’arête'), alg: "R U' R' U' R U R D R' U' R D' R' U2 R'" },
+  { id: 'Rb', name: 'Rb-perm', pattern: tr('3-corner cycle + edge swap (mirror)', '3-cycle de coins + échange d’arête (miroir)'), alg: "R2 F R U R U' R' F' R U2 R' U2 R" },
+  { id: 'T',  name: 'T-perm', pattern: tr('Adjacent corner+edge swap, the classic', 'Échange coin+arête adjacents, le classique'), alg: "R U R' U' R' F R2 U' R' U' R U R' F'" },
+  { id: 'Ua', name: 'Ua-perm', pattern: tr('Edge 3-cycle CCW', '3-cycle d’arêtes (anti-horaire)'), alg: "R U' R U R U R U' R' U' R2" },
+  { id: 'Ub', name: 'Ub-perm', pattern: tr('Edge 3-cycle CW', '3-cycle d’arêtes (horaire)'), alg: "R2 U R U R' U' R' U' R' U R'" },
+  { id: 'V',  name: 'V-perm', pattern: tr('Diagonal corner + adjacent edge swap', 'Échange diagonal de coins + arêtes adjacentes'), alg: "R' U R' U' y R' F' R2 U' R' U R' F R F" },
+  { id: 'Y',  name: 'Y-perm', pattern: tr('Diagonal corner + opposite edge swap', 'Échange diagonal de coins + arêtes opposées'), alg: "F R U' R' U' R U R' F' R U R' U' R' F R F'" },
+  { id: 'Z',  name: 'Z-perm', pattern: tr('Adjacent edge double-swap', 'Double échange d’arêtes adjacentes'), alg: "M2 U M2 U M' U2 M2 U2 M'" },
 ];
 
-// Group helpers used by views
-export const algorithmGroups = {
-  '2look-oll-edges': { title: '2-Look OLL — Edges', algs: ollTwoLookEdges },
-  '2look-oll-corners': { title: '2-Look OLL — Corners', algs: ollTwoLookCorners },
-  '2look-pll-corners': { title: '2-Look PLL — Corners', algs: pllTwoLookCorners },
-  '2look-pll-edges': { title: '2-Look PLL — Edges', algs: pllTwoLookEdges },
-  'f2l-basic': { title: 'F2L — Foundation cases', algs: f2lBasic },
-  'oll-full': { title: 'Full OLL (57)', algs: ollFull },
-  'pll-full': { title: 'Full PLL (21)', algs: pllFull },
+const GROUPS = {
+  '2look-oll-edges': { titleKey: '2look-oll-edges', algs: ollTwoLookEdges },
+  '2look-oll-corners': { titleKey: '2look-oll-corners', algs: ollTwoLookCorners },
+  '2look-pll-corners': { titleKey: '2look-pll-corners', algs: pllTwoLookCorners },
+  '2look-pll-edges': { titleKey: '2look-pll-edges', algs: pllTwoLookEdges },
+  'f2l-basic': { titleKey: 'f2l-basic', algs: f2lBasic },
+  'oll-full': { titleKey: 'oll-full', algs: ollFull },
+  'pll-full': { titleKey: 'pll-full', algs: pllFull },
 };
+
+// Locale-aware getter. Resolves tr() cells on every access.
+export function getAlgorithmGroups() {
+  const out = {};
+  for (const key in GROUPS) {
+    out[key] = {
+      titleKey: GROUPS[key].titleKey,
+      algs: localize(GROUPS[key].algs),
+    };
+  }
+  return out;
+}

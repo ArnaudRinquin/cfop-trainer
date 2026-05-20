@@ -1,6 +1,7 @@
-import { html } from './shared.js';
+import { html, raw } from './shared.js';
 import { getState, ao, bestSolve } from '../state.js';
 import { formatMs } from '../timer.js';
+import { t } from '../i18n.js';
 
 function fmt(ms) {
   if (ms == null) return '—';
@@ -18,19 +19,19 @@ export function solvesView() {
   return html`
     <div class="flex items-baseline justify-between mb-8">
       <div>
-        <h1 class="font-display text-3xl sm:text-4xl font-semibold text-ink-50">Solves</h1>
-        <p class="text-ink-400 mt-1">All times you've logged with the timer.</p>
+        <h1 class="font-display text-3xl sm:text-4xl font-semibold text-ink-50">${t('solves.title')}</h1>
+        <p class="text-ink-400 mt-1">${t('solves.subtitle')}</p>
       </div>
-      <button id="open-timer-solves" class="bg-accent text-ink-950 font-medium px-3 py-1.5 rounded-md text-sm hover:bg-accent-hover">+ New solve</button>
+      <button id="open-timer-solves" class="bg-accent text-ink-950 font-medium px-3 py-1.5 rounded-md text-sm hover:bg-accent-hover">${t('buttons.newSolve')}</button>
     </div>
 
     <div class="grid grid-cols-2 md:grid-cols-5 gap-3 mb-8">
       ${[
-        ['Solves', solves.length],
-        ['Best', best ? fmt(best.ms) : '—'],
-        ['ao5', fmt(a5)],
-        ['ao12', fmt(a12)],
-        ['ao100', fmt(a100)],
+        [t('stats.solves'), solves.length],
+        [t('stats.best'), best ? fmt(best.ms) : '—'],
+        [t('stats.ao5'), fmt(a5)],
+        [t('stats.ao12'), fmt(a12)],
+        [t('stats.ao100'), fmt(a100)],
       ].map(
         ([label, value]) => html`
           <div class="card p-4">
@@ -45,8 +46,11 @@ export function solvesView() {
       solves.length === 0
         ? html`<div class="card p-12 text-center">
             <div class="text-ink-300 max-w-md mx-auto">
-              No solves yet. Hit the
-              <kbd class="px-1.5 py-0.5 bg-ink-800 rounded mx-1">T</kbd> key or the timer button to log your first solve.
+              ${raw(
+                t('solves.empty', {
+                  kbd: '<kbd class="px-1.5 py-0.5 bg-ink-800 rounded mx-1">T</kbd>',
+                })
+              )}
             </div>
           </div>`
         : html`
@@ -54,10 +58,10 @@ export function solvesView() {
               <table class="w-full text-sm">
                 <thead class="bg-white/[0.02] text-ink-500 uppercase tracking-widest text-[10px]">
                   <tr>
-                    <th class="text-left px-4 py-3 w-12">#</th>
-                    <th class="text-left px-4 py-3 w-24">Time</th>
-                    <th class="text-left px-4 py-3">Scramble</th>
-                    <th class="text-left px-4 py-3 w-32">Date</th>
+                    <th class="text-left px-4 py-3 w-12">${t('solves.columns.number')}</th>
+                    <th class="text-left px-4 py-3 w-24">${t('solves.columns.time')}</th>
+                    <th class="text-left px-4 py-3">${t('solves.columns.scramble')}</th>
+                    <th class="text-left px-4 py-3 w-32">${t('solves.columns.date')}</th>
                     <th class="px-4 py-3 w-12"></th>
                   </tr>
                 </thead>

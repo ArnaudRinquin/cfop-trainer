@@ -12,6 +12,7 @@ const defaultState = {
     showInspection: true,
     inspectionSeconds: 15,
     scrambleLength: 20,
+    locale: 'en',
   },
 };
 

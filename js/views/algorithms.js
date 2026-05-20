@@ -1,19 +1,21 @@
 import { html, raw, esc, renderFace } from './shared.js';
-import { algorithmGroups } from '../data/algorithms.js';
+import { getAlgorithmGroups } from '../data/algorithms.js';
 import { getAlgStatus } from '../state.js';
+import { t } from '../i18n.js';
 
-const TABS = [
-  { id: '2look-oll-edges', label: '2L OLL edges' },
-  { id: '2look-oll-corners', label: '2L OLL corners' },
-  { id: '2look-pll-corners', label: '2L PLL corners' },
-  { id: '2look-pll-edges', label: '2L PLL edges' },
-  { id: 'f2l-basic', label: 'F2L basics' },
-  { id: 'oll-full', label: 'Full OLL (57)' },
-  { id: 'pll-full', label: 'Full PLL (21)' },
+const TAB_IDS = [
+  '2look-oll-edges',
+  '2look-oll-corners',
+  '2look-pll-corners',
+  '2look-pll-edges',
+  'f2l-basic',
+  'oll-full',
+  'pll-full',
 ];
 
 export function algorithmsView(activeTab = '2look-oll-edges') {
-  const group = algorithmGroups[activeTab];
+  const groups = getAlgorithmGroups();
+  const group = groups[activeTab];
   if (!group) {
     return algorithmsView('2look-oll-edges');
   }
@@ -23,21 +25,18 @@ export function algorithmsView(activeTab = '2look-oll-edges') {
 
   return html`
     <div class="mb-8">
-      <h1 class="font-display text-3xl sm:text-4xl font-semibold text-ink-50">Algorithms</h1>
-      <p class="text-ink-400 mt-2 max-w-2xl">
-        Reference library and personal mastery tracker for every CFOP algorithm.
-        Use this with the timer in another tab — drill until recognition becomes instant.
-      </p>
+      <h1 class="font-display text-3xl sm:text-4xl font-semibold text-ink-50">${t('algorithms.title')}</h1>
+      <p class="text-ink-400 mt-2 max-w-2xl">${t('algorithms.description')}</p>
     </div>
 
     <div class="flex flex-wrap gap-1 mb-6">
-      ${TABS.map(
-        (t) => html`
+      ${TAB_IDS.map(
+        (id) => html`
           <button
-            data-algtab="${t.id}"
-            class="tab-button ${t.id === activeTab ? 'active' : ''}"
+            data-algtab="${id}"
+            class="tab-button ${id === activeTab ? 'active' : ''}"
           >
-            ${t.label}
+            ${t('algorithms.tabs.' + id)}
           </button>
         `
       )}
@@ -45,17 +44,17 @@ export function algorithmsView(activeTab = '2look-oll-edges') {
 
     <div class="card p-5 mb-6 flex items-center gap-6 flex-wrap">
       <div>
-        <div class="text-ink-500 text-xs uppercase tracking-widest">${group.title}</div>
-        <div class="font-display text-xl text-ink-50 mt-1">${total} algorithms</div>
+        <div class="text-ink-500 text-xs uppercase tracking-widest">${t('algorithms.tabs.' + activeTab)}</div>
+        <div class="font-display text-xl text-ink-50 mt-1">${total} ${t('algorithms.algorithmsSuffix')}</div>
       </div>
       <div class="flex-1 min-w-[200px] max-w-md">
         <div class="progress-track"><div class="progress-fill" style="width:${
           total ? Math.round((mastered / total) * 100) : 0
         }%"></div></div>
         <div class="text-xs text-ink-400 mt-2 flex gap-4">
-          <span><span class="text-accent">${mastered}</span> mastered</span>
-          <span><span class="text-yellow-300">${learning}</span> learning</span>
-          <span>${total - mastered - learning} untouched</span>
+          <span><span class="text-accent">${mastered}</span> ${t('algorithms.mastered')}</span>
+          <span><span class="text-yellow-300">${learning}</span> ${t('algorithms.learning')}</span>
+          <span>${total - mastered - learning} ${t('algorithms.untouched')}</span>
         </div>
       </div>
     </div>
@@ -78,10 +77,10 @@ export function algorithmsView(activeTab = '2look-oll-edges') {
                 <div class="mt-3 flex gap-2">
                   <button class="alg-toggle text-xs px-2.5 py-1 rounded border transition-colors ${
                     status === 'learning' ? 'border-yellow-400/50 text-yellow-300 bg-yellow-400/10' : 'border-white/10 text-ink-300 hover:bg-white/5'
-                  }" data-alg-id="${alg.id}" data-set="learning">Learning</button>
+                  }" data-alg-id="${alg.id}" data-set="learning">${t('buttons.learning')}</button>
                   <button class="alg-toggle text-xs px-2.5 py-1 rounded border transition-colors ${
                     isMastered ? 'border-accent text-ink-950 bg-accent' : 'border-white/10 text-ink-300 hover:bg-white/5'
-                  }" data-alg-id="${alg.id}" data-set="mastered">Mastered</button>
+                  }" data-alg-id="${alg.id}" data-set="mastered">${t('buttons.mastered')}</button>
                 </div>
               </div>
             </div>

@@ -9,6 +9,7 @@
 
 import { addSolve, getState } from './state.js';
 import { generateScramble } from './scramble.js';
+import { t } from './i18n.js';
 
 const HOLD_TIME_MS = 500;
 
@@ -17,8 +18,19 @@ const els = () => ({
   display: document.getElementById('timer-display'),
   state: document.getElementById('timer-state'),
   scramble: document.getElementById('timer-scramble'),
+  scrambleLabel: document.getElementById('timer-scramble-label'),
+  hints: document.getElementById('timer-hints'),
   recent: document.getElementById('timer-recent'),
 });
+
+function renderStatics() {
+  const e = els();
+  e.scrambleLabel.textContent = t('timer.scrambleLabel');
+  e.hints.innerHTML =
+    `<kbd class="px-1.5 py-0.5 bg-ink-800 rounded">Space</kbd> ${t('timer.spaceHint')} &middot; ` +
+    `<kbd class="px-1.5 py-0.5 bg-ink-800 rounded">N</kbd> ${t('timer.newScrambleHint')} &middot; ` +
+    `<kbd class="px-1.5 py-0.5 bg-ink-800 rounded">Esc</kbd> ${t('timer.closeHint')}`;
+}
 
 const state = {
   open: false,
@@ -44,21 +56,21 @@ function setPhase(next) {
   e.display.classList.remove('timer-ready', 'timer-running', 'timer-holding');
   switch (next) {
     case 'idle':
-      e.state.textContent = 'Press & hold space';
+      e.state.textContent = t('timer.pressHold');
       e.display.textContent = '0.00';
       break;
     case 'holding':
-      e.state.textContent = 'Hold...';
+      e.state.textContent = t('timer.holding');
       e.display.classList.add('timer-holding');
       e.display.textContent = '0.00';
       break;
     case 'ready':
-      e.state.textContent = 'Release to start';
+      e.state.textContent = t('timer.ready');
       e.display.classList.add('timer-ready');
       e.display.textContent = '0.00';
       break;
     case 'running':
-      e.state.textContent = 'Solving — press space to stop';
+      e.state.textContent = t('timer.solving');
       e.display.classList.add('timer-running');
       break;
   }
@@ -160,6 +172,7 @@ export function openTimer() {
   state.open = true;
   els().overlay.classList.remove('hidden');
   els().overlay.classList.add('flex');
+  renderStatics();
   setPhase('idle');
   newScramble();
   renderRecent();
@@ -188,7 +201,7 @@ window.addEventListener('keydown', (e) => {
   if (state.open) return;
   if (e.code !== 'KeyT') return;
   const target = e.target;
-  if (target && (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable)) return;
+  if (target && (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.tagName === 'SELECT' || target.isContentEditable)) return;
   openTimer();
 });
 

@@ -1,7 +1,8 @@
 import { html, raw, esc, renderFace } from './shared.js';
 import { findLesson, flatLessons } from '../data/curriculum.js';
-import { algorithmGroups } from '../data/algorithms.js';
+import { getAlgorithmGroups } from '../data/algorithms.js';
 import { isLessonCompleted, getAlgStatus } from '../state.js';
+import { t } from '../i18n.js';
 
 function block(b) {
   switch (b.kind) {
@@ -36,10 +37,10 @@ function algCard(alg) {
           <div class="mt-3 flex gap-2">
             <button class="alg-toggle text-xs px-2.5 py-1 rounded border transition-colors ${
               status === 'learning' ? 'border-yellow-400/50 text-yellow-300 bg-yellow-400/10' : 'border-white/10 text-ink-300 hover:bg-white/5'
-            }" data-alg-id="${alg.id}" data-set="learning">Learning</button>
+            }" data-alg-id="${alg.id}" data-set="learning">${t('buttons.learning')}</button>
             <button class="alg-toggle text-xs px-2.5 py-1 rounded border transition-colors ${
               mastered ? 'border-accent text-ink-950 bg-accent' : 'border-white/10 text-ink-300 hover:bg-white/5'
-            }" data-alg-id="${alg.id}" data-set="mastered">Mastered</button>
+            }" data-alg-id="${alg.id}" data-set="mastered">${t('buttons.mastered')}</button>
           </div>
         </div>
       </div>
@@ -58,22 +59,23 @@ function lessonNav(lessonId) {
 export function lessonView(lessonId) {
   const found = findLesson(lessonId);
   if (!found) {
-    return html`<div class="text-ink-400">Lesson not found. <a class="link-underline" href="#/dashboard">Back</a></div>`;
+    return html`<div class="text-ink-400">${t('lesson.notFound')} <a class="link-underline" href="#/dashboard">${t('lesson.back')}</a></div>`;
   }
   const { lesson, stage } = found;
   const completed = isLessonCompleted(lesson.id);
   const { prev, next } = lessonNav(lesson.id);
+  const groups = getAlgorithmGroups();
 
   const algGroups = [];
-  if (lesson.practiceAlgs && algorithmGroups[lesson.practiceAlgs]) algGroups.push(algorithmGroups[lesson.practiceAlgs]);
-  if (lesson.practiceAlgs2 && algorithmGroups[lesson.practiceAlgs2]) algGroups.push(algorithmGroups[lesson.practiceAlgs2]);
+  if (lesson.practiceAlgs && groups[lesson.practiceAlgs]) algGroups.push(groups[lesson.practiceAlgs]);
+  if (lesson.practiceAlgs2 && groups[lesson.practiceAlgs2]) algGroups.push(groups[lesson.practiceAlgs2]);
 
   return html`
     <div class="grid grid-cols-1 lg:grid-cols-[260px_1fr] gap-10">
       <aside class="lg:sticky lg:top-20 self-start">
         <a href="#/dashboard" class="text-ink-400 hover:text-ink-100 text-xs inline-flex items-center gap-1 mb-6">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>
-          All lessons
+          ${t('lesson.allLessons')}
         </a>
         <div class="flex items-center gap-2 mb-4">
           <div class="w-2 h-2 rounded-full" style="background:${stage.color};"></div>
@@ -110,15 +112,12 @@ export function lessonView(lessonId) {
           algGroups.length
             ? html`
                 <section class="mt-12">
-                  <h2 class="font-display text-xl text-ink-50 mb-2">Practice algorithms</h2>
-                  <p class="text-ink-400 text-sm mb-6 max-w-2xl">
-                    Mark each algorithm as you go. ${raw('<em>Learning</em>')} means you can do it slowly with notation;
-                    ${raw('<em>Mastered</em>')} means you can execute it without thinking and recognise the case from the cube.
-                  </p>
+                  <h2 class="font-display text-xl text-ink-50 mb-2">${t('lesson.practiceAlgs')}</h2>
+                  <p class="text-ink-400 text-sm mb-6 max-w-2xl">${raw(t('lesson.practiceHint'))}</p>
                   ${algGroups.map(
                     (g) => html`
                       <div class="mb-8">
-                        <h3 class="font-display text-base text-ink-100 mb-3">${g.title}</h3>
+                        <h3 class="font-display text-base text-ink-100 mb-3">${t('algorithms.tabs.' + g.titleKey)}</h3>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
                           ${g.algs.map((a) => algCard(a))}
                         </div>
@@ -136,7 +135,7 @@ export function lessonView(lessonId) {
               ? 'inline-flex items-center gap-2 border border-accent/40 bg-accent/10 text-accent px-4 py-2 rounded-md hover:bg-accent/20'
               : 'inline-flex items-center gap-2 bg-accent text-ink-950 font-medium px-4 py-2 rounded-md hover:bg-accent-hover transition-colors'
           }">
-            ${completed ? '✓ Lesson completed' : 'Mark lesson complete'}
+            ${completed ? t('buttons.completed') : t('buttons.markComplete')}
           </button>
           ${
             prev
@@ -145,7 +144,7 @@ export function lessonView(lessonId) {
           }
           ${
             next
-              ? html`<a href="#/lesson/${next.id}" class="text-sm text-accent hover:text-accent-hover inline-flex items-center gap-1 ${prev ? '' : 'ml-auto'}">Next: ${next.title}<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></a>`
+              ? html`<a href="#/lesson/${next.id}" class="text-sm text-accent hover:text-accent-hover inline-flex items-center gap-1 ${prev ? '' : 'ml-auto'}">${t('lesson.next', { title: next.title })}<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></a>`
               : ''
           }
         </section>
