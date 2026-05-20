@@ -1,0 +1,10 @@
+{
+  "name": "cfop-trainer",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "CFOP cube-solving curriculum, algorithm trainer, and timer.",
+  "scripts": {
+    "dev": "python3 -m http.server 4178"
+  }
+}

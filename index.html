@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>CFOP Trainer — Learn to solve the cube fast</title>
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='40' height='40' x='5' y='5' fill='%23fde047' rx='4'/%3E%3Crect width='40' height='40' x='55' y='5' fill='%23ef4444' rx='4'/%3E%3Crect width='40' height='40' x='5' y='55' fill='%2322c55e' rx='4'/%3E%3Crect width='40' height='40' x='55' y='55' fill='%233b82f6' rx='4'/%3E%3C/svg%3E" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+              mono: ['JetBrains Mono', 'ui-monospace', 'SFMono-Regular', 'Menlo', 'monospace'],
+              display: ['"Space Grotesk"', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+            },
+            colors: {
+              ink: {
+                50: '#f7f7f8',
+                100: '#eeeef0',
+                200: '#d9d9de',
+                300: '#b4b4bd',
+                400: '#83838f',
+                500: '#5e5e6a',
+                600: '#46464f',
+                700: '#34343b',
+                800: '#1f1f23',
+                900: '#111114',
+                950: '#08080a',
+              },
+              cube: {
+                white: '#f5f5f5',
+                yellow: '#facc15',
+                red: '#ef4444',
+                orange: '#f97316',
+                blue: '#3b82f6',
+                green: '#22c55e',
+              },
+              accent: { DEFAULT: '#a3e635', hover: '#bef264' },
+            },
+            boxShadow: {
+              card: '0 1px 0 0 rgba(255,255,255,0.04) inset, 0 24px 60px -28px rgba(0,0,0,0.7)',
+            },
+          },
+        },
+      };
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body class="bg-ink-950 text-ink-100 font-sans antialiased min-h-screen">
+    <div id="app"></div>
+
+    <div
+      id="timer-overlay"
+      class="fixed inset-0 z-50 hidden items-center justify-center bg-ink-950/95 backdrop-blur-sm"
+    >
+      <div class="text-center px-8 max-w-2xl">
+        <div id="timer-state" class="text-ink-400 font-mono uppercase tracking-[0.3em] text-xs mb-4">
+          Press &amp; hold space
+        </div>
+        <div
+          id="timer-display"
+          class="font-mono font-semibold tabular-nums text-7xl sm:text-9xl text-ink-50 tracking-tight"
+        >
+          0.00
+        </div>
+        <div id="timer-scramble" class="mt-8 font-mono text-ink-300 text-lg break-words"></div>
+        <div class="mt-2 text-ink-500 text-xs uppercase tracking-widest">Scramble</div>
+        <div class="mt-10 text-ink-500 text-xs">
+          <kbd class="px-1.5 py-0.5 bg-ink-800 rounded">Space</kbd>
+          start/stop &middot;
+          <kbd class="px-1.5 py-0.5 bg-ink-800 rounded">N</kbd>
+          new scramble &middot;
+          <kbd class="px-1.5 py-0.5 bg-ink-800 rounded">Esc</kbd>
+          close
+        </div>
+        <div id="timer-recent" class="mt-10 flex flex-wrap gap-2 justify-center text-xs text-ink-400"></div>
+      </div>
+    </div>
+
+    <script type="module" src="./js/app.js"></script>
+  </body>
+</html>
