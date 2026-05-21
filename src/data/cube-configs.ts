@@ -11,32 +11,38 @@ export interface CubeConfig {
   visualization?: VisualizationKind;
 }
 
+// CFOP convention: yellow on top, white on bottom — `z2` flips cubing.js's
+// default (white on top) to match.
 export const cubeConfigs: Record<string, CubeConfig> = {
-  solved: { stickering: 'full', visualization: '3D' },
+  solved: { setup: 'z2', stickering: 'full', visualization: '3D' },
 
   scrambled: {
-    setup: "F R U2 L2 D' R' F' U L' B2 R U' D F2 B'",
+    setup: "z2 F R U2 L2 D' R' F' U L' B2 R U' D F2 B'",
     stickering: 'full',
     visualization: '3D',
   },
+  // Cross preserved on the bottom (D-cross = white after z2). F2L-style
+  // sequences keep D-edges intact while scrambling F2L slots + U layer.
   'cross-solved': {
-    setup: "R U R' F2 L F U F",
+    setup: "z2 R U R' U' L' U' L U F U F' U' B' U' B U",
     stickering: 'full',
     visualization: '3D',
   },
+  // F2L done, OLL pending — Sune leaves bottom 2 layers solved.
   'f2l-solved': {
-    setup: "R U R' U R U2 R' U R U R' U' R' F R F'",
+    setup: "z2 R U R' U R U2 R'",
     stickering: 'full',
     visualization: '3D',
   },
+  // OLL done, PLL pending — T-perm permutes the (already-oriented) yellow top.
   'oll-solved': {
-    setup: "R U R' U' R' F R2 U' R' U' R U R' F'",
+    setup: "z2 R U R' U' R' F R2 U' R' U' R U R' F'",
     stickering: 'full',
     visualization: '3D',
   },
 
   // Sexy move at start (demo for notation lesson).
-  sexy: { alg: "R U R' U'", stickering: 'full', visualization: '3D' },
+  sexy: { setup: 'z2', alg: "R U R' U'", stickering: 'full', visualization: '3D' },
 };
 
 export type CubeView = 'oll-edges' | 'oll-corners' | 'oll-full' | 'pll' | 'iso';
