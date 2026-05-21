@@ -1,0 +1,53 @@
+---
+title: 'Qu’est-ce que CFOP ?'
+eyebrow: 'Leçon 1'
+estimate: '6 min'
+goal: 'Voir la méthode entière avant tout algorithme.'
+order: 1
+---
+
+import Cube from '~/components/Cube';
+
+CFOP est la méthode de speedsolving la plus utilisée au monde — celle de tous les solveurs sub-15. Le nom liste les quatre étapes : **C**ross, **F**2L, **O**LL, **P**LL. Vous passez un cube mélangé à travers quatre points de contrôle. C’est tout.
+
+### Les quatre étapes
+
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:0.75rem;margin:1.25rem 0;">
+  <figure style="text-align:center;margin:0;">
+    <Cube id="scrambled" size={120} client:load />
+    <figcaption style="font-size:0.75rem;color:#a3a3aa;margin-top:0.35rem;">Mélangé</figcaption>
+  </figure>
+  <figure style="text-align:center;margin:0;">
+    <Cube id="cross-solved" size={120} client:load />
+    <figcaption style="font-size:0.75rem;color:#a3a3aa;margin-top:0.35rem;">Après la croix</figcaption>
+  </figure>
+  <figure style="text-align:center;margin:0;">
+    <Cube id="f2l-solved" size={120} client:load />
+    <figcaption style="font-size:0.75rem;color:#a3a3aa;margin-top:0.35rem;">Après F2L</figcaption>
+  </figure>
+  <figure style="text-align:center;margin:0;">
+    <Cube id="oll-solved" size={120} client:load />
+    <figcaption style="font-size:0.75rem;color:#a3a3aa;margin-top:0.35rem;">Après OLL</figcaption>
+  </figure>
+  <figure style="text-align:center;margin:0;">
+    <Cube id="solved" size={120} client:load />
+    <figcaption style="font-size:0.75rem;color:#a3a3aa;margin-top:0.35rem;">Après PLL</figcaption>
+  </figure>
+</div>
+
+- **Cross** — résoudre les quatre arêtes d’une face (le dessous). Intuitif, sans algorithme. ~7 mouvements.
+- **F2L** — _First Two Layers_. Apparier un coin avec son arête, insérer la paire. À répéter 4 fois. Intuitif, puis algorithmique. ~30 mouvements.
+- **OLL** — _Orient Last Layer_. Rendre la face du dessus uniformément jaune. Un algo parmi 57. ~10 mouvements.
+- **PLL** — _Permute Last Layer_. Déplacer les pièces du dessus à leurs bonnes positions. Un algo parmi 21. ~12 mouvements.
+
+Une résolution CFOP complète prend ~55–60 mouvements. Le niveau mondial est sub-7 secondes. Sub-20 est un objectif réaliste pour la plupart des débutants.
+
+### Pourquoi pas une couche à la fois ?
+
+La méthode débutante (« layer by layer », LBL) résout la couche 1, puis 2, puis 3. F2L est la rupture : il résout les couches 1 et 2 _simultanément_ en insérant les paires coin+arête ensemble. Même nombre de pièces, deux fois moins d’étapes, exécution bien plus rapide.
+
+CFOP sépare aussi la dernière couche en _orienter_ puis _permuter_. Chaque phase a un ensemble fini de cas à apprendre. Vous n’improvisez jamais à la fin.
+
+<div class="tip">
+  Pas besoin d’apprendre les 57 OLL + 21 PLL pour commencer. Les étapes « 2-Look » enseignent 10 OLL + 6 PLL qui résolvent tous les cas en deux algos au lieu d’un. Largement assez rapide pour passer sub-25.
+</div>

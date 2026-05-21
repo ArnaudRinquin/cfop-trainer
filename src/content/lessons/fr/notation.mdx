@@ -1,10 +1,12 @@
 ---
 title: 'Notation : l’alphabet'
-eyebrow: 'Leçon 1'
+eyebrow: 'Leçon 2'
 estimate: '8 min'
 goal: 'Lire et exécuter n’importe quelle séquence de mouvements.'
-order: 1
+order: 2
 ---
+
+import Cube from '~/components/Cube';
 
 Tout algorithme se résume à des lettres : `R U R' U'`. Maîtrisez l’alphabet et la méthode CFOP s’ouvre à vous.
 
@@ -26,4 +28,8 @@ Tenez le cube avec une couleur sur le dessus. Les six faces sont : _R_ight (droi
 
 <div class="tip">
   Drill : prenez votre cube et exécutez `R U R' U'` six fois. Vous devez revenir à la position de départ. Cette séquence s’appelle le _sexy move_ et vous l’exécuterez plus que toute autre.
+</div>
+
+<div style="display:flex;justify-content:center;margin:1.5rem 0;">
+  <Cube id="sexy" size={220} animated client:load />
 </div>

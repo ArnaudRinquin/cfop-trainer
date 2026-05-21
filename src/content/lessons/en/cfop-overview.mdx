@@ -1,0 +1,53 @@
+---
+title: 'What is CFOP?'
+eyebrow: 'Lesson 1'
+estimate: '6 min'
+goal: 'See the whole method before learning any algorithm.'
+order: 1
+---
+
+import Cube from '~/components/Cube';
+
+CFOP is the world's most popular speedsolving method — the one every sub-15 solver uses. The name spells out the four steps in order: **C**ross, **F**2L, **O**LL, **P**LL. You take a scrambled cube and pass it through four checkpoints. That's it.
+
+### The four steps
+
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:0.75rem;margin:1.25rem 0;">
+  <figure style="text-align:center;margin:0;">
+    <Cube id="scrambled" size={120} client:load />
+    <figcaption style="font-size:0.75rem;color:#a3a3aa;margin-top:0.35rem;">Scrambled</figcaption>
+  </figure>
+  <figure style="text-align:center;margin:0;">
+    <Cube id="cross-solved" size={120} client:load />
+    <figcaption style="font-size:0.75rem;color:#a3a3aa;margin-top:0.35rem;">After Cross</figcaption>
+  </figure>
+  <figure style="text-align:center;margin:0;">
+    <Cube id="f2l-solved" size={120} client:load />
+    <figcaption style="font-size:0.75rem;color:#a3a3aa;margin-top:0.35rem;">After F2L</figcaption>
+  </figure>
+  <figure style="text-align:center;margin:0;">
+    <Cube id="oll-solved" size={120} client:load />
+    <figcaption style="font-size:0.75rem;color:#a3a3aa;margin-top:0.35rem;">After OLL</figcaption>
+  </figure>
+  <figure style="text-align:center;margin:0;">
+    <Cube id="solved" size={120} client:load />
+    <figcaption style="font-size:0.75rem;color:#a3a3aa;margin-top:0.35rem;">After PLL</figcaption>
+  </figure>
+</div>
+
+- **Cross** — solve the four edges of one face (the bottom). Intuitive, no algorithms. ~7 moves.
+- **F2L** — _First Two Layers_. Pair a corner with its edge, slot the pair into place. Repeat 4 times. Intuitive, then algorithmic. ~30 moves.
+- **OLL** — _Orient Last Layer_. Make the top face one solid color. One algorithm from 57. ~10 moves.
+- **PLL** — _Permute Last Layer_. Move the top pieces to their correct spots. One algorithm from 21. ~12 moves.
+
+A full CFOP solve takes ~55–60 moves. World-class is sub-7 seconds. Sub-20 is a realistic goal for most learners.
+
+### Why not just solve layer by layer?
+
+The beginner method ("layer by layer", LBL) solves layer 1, then layer 2, then layer 3. F2L is the breakthrough: it solves layers 1 and 2 _at the same time_ by inserting corner-edge pairs together. Same number of pieces, half the steps, way faster execution.
+
+CFOP also separates the last layer into _orient_ then _permute_. Each phase has a finite, learnable set of cases. You're never improvising at the end.
+
+<div class="tip">
+  You don't need to learn all 57 OLLs + 21 PLLs to start. The "2-Look" stages teach 10 OLLs + 6 PLLs that solve every case in two algorithms instead of one. Plenty fast to break sub-25.
+</div>

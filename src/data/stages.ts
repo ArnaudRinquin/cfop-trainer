@@ -29,7 +29,7 @@ const RAW: RawStage[] = [
       'Learn the language of the cube before any algorithms.',
       'Apprenez le langage du cube avant tout algorithme.'
     ),
-    lessons: ['notation', 'anatomy'],
+    lessons: ['cfop-overview', 'notation', 'anatomy'],
   },
   {
     id: 'cross',

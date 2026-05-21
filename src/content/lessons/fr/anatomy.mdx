@@ -1,10 +1,16 @@
 ---
 title: 'Anatomie du cube et schéma de couleurs'
-eyebrow: 'Leçon 2'
+eyebrow: 'Leçon 3'
 estimate: '5 min'
 goal: 'Comprendre la différence entre pièces et stickers, et le schéma de couleurs fixe.'
-order: 2
+order: 3
 ---
+
+import Cube from '~/components/Cube';
+
+<div style="display:flex;justify-content:center;margin:0 0 1.5rem 0;">
+  <Cube id="solved" size={200} client:load />
+</div>
 
 Un 3×3 compte _trois types de pièces_ : 6 centres (1 sticker), 12 arêtes (2 stickers) et 8 coins (3 stickers). Les centres ne bougent jamais les uns par rapport aux autres — ils définissent le schéma de couleurs.
 
