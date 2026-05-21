@@ -11,6 +11,11 @@ export default defineConfig({
   },
   vite: {
     plugins: [tailwindcss()],
+    optimizeDeps: {
+      // cubing.js relies on dynamic chunk loading (puzzles-dynamic-3x3x3, etc.)
+      // that Vite's dep pre-bundler breaks. Exclude so Vite serves it directly.
+      exclude: ['cubing', 'cubing/twisty', 'cubing/alg', 'cubing/puzzles', 'cubing/kpuzzle'],
+    },
   },
   i18n: {
     defaultLocale: 'en',

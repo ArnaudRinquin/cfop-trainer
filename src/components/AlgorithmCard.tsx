@@ -1,15 +1,36 @@
 import { useEffect, useState } from 'react';
 import type { Algorithm } from '~/data/algorithms';
+import type { CubeView } from '~/data/cube-configs';
+import { invertMoves } from '~/lib/moves';
 import { getAlgStatus, setAlgStatus, subscribe } from '~/lib/state';
+import TwistyCube, { type StickeringKind, type VisualizationKind } from './TwistyCube';
+import AlgorithmModal from './AlgorithmModal';
 
 interface Props {
   alg: Algorithm;
+  view: CubeView;
   learningLabel: string;
   masteredLabel: string;
 }
 
-export default function AlgorithmCard({ alg, learningLabel, masteredLabel }: Props) {
+function cubeOptions(view: CubeView): { stickering: StickeringKind; visualization: VisualizationKind; size: number } {
+  switch (view) {
+    case 'oll-edges':
+      return { stickering: 'EOLL', visualization: 'experimental-2D-LL', size: 110 };
+    case 'oll-corners':
+      return { stickering: 'OCLL', visualization: 'experimental-2D-LL', size: 110 };
+    case 'oll-full':
+      return { stickering: 'OLL', visualization: 'experimental-2D-LL', size: 110 };
+    case 'pll':
+      return { stickering: 'PLL', visualization: 'experimental-2D-LL', size: 110 };
+    case 'iso':
+      return { stickering: 'F2L', visualization: '3D', size: 110 };
+  }
+}
+
+export default function AlgorithmCard({ alg, view, learningLabel, masteredLabel }: Props) {
   const [status, setStatus] = useState(() => getAlgStatus(alg.id));
+  const [open, setOpen] = useState(false);
 
   useEffect(() => {
     const unsub = subscribe(() => setStatus(getAlgStatus(alg.id)));
@@ -22,17 +43,26 @@ export default function AlgorithmCard({ alg, learningLabel, masteredLabel }: Pro
   };
 
   const mastered = status === 'mastered';
+  const setup = invertMoves(alg.alg);
+  const { stickering, visualization, size } = cubeOptions(view);
 
   return (
     <div className={`algo-card ${mastered ? 'mastered' : ''}`}>
       <div className="flex items-start gap-4">
-        {alg.sticker ? (
-          <div className="face-grid w-24 h-24 shrink-0">
-            {alg.sticker.flatMap((row, ri) =>
-              row.map((c, ci) => <div key={`${ri}-${ci}`} className={`cube-cell cube-${c}`} />)
-            )}
-          </div>
-        ) : null}
+        <button
+          type="button"
+          onClick={() => setOpen(true)}
+          className="shrink-0 rounded-md focus:outline-none focus:ring-2 focus:ring-accent/40 hover:opacity-90 transition-opacity cursor-pointer"
+          aria-label={`Play ${alg.name}`}
+        >
+          <TwistyCube
+            setupAlg={setup}
+            alg={alg.alg}
+            stickering={stickering}
+            visualization={visualization}
+            size={size}
+          />
+        </button>
         <div className="flex-1 min-w-0">
           <div className="flex items-baseline gap-2 flex-wrap">
             <div className="font-display font-semibold text-ink-50">{alg.name}</div>
@@ -69,6 +99,7 @@ export default function AlgorithmCard({ alg, learningLabel, masteredLabel }: Pro
           </div>
         </div>
       </div>
+      {open ? <AlgorithmModal alg={alg} onClose={() => setOpen(false)} /> : null}
     </div>
   );
 }

@@ -2,6 +2,7 @@
 // Notation strings and nickname-style names (Sune, T-perm) are universal.
 // Descriptive patterns and notes are localized via tr() cells.
 import { tr, localize, type Translatable, type Locale } from '~/i18n/config';
+import type { CubeView } from '~/data/cube-configs';
 
 export type AlgGroupKey =
   | '2look-oll-edges'
@@ -12,15 +13,12 @@ export type AlgGroupKey =
   | 'oll-full'
   | 'pll-full';
 
-type StickerColor = 'W' | 'Y' | 'R' | 'O' | 'B' | 'G' | 'X';
-
 interface RawAlgorithm {
   id: string;
   name: string | Translatable;
   alg: string;
   pattern?: string | Translatable;
   note?: string | Translatable;
-  sticker?: StickerColor[][];
 }
 
 export interface Algorithm {
@@ -29,8 +27,17 @@ export interface Algorithm {
   alg: string;
   pattern?: string;
   note?: string;
-  sticker?: StickerColor[][];
 }
+
+export const ALG_GROUP_VIEW: Record<AlgGroupKey, CubeView> = {
+  '2look-oll-edges': 'oll-edges',
+  '2look-oll-corners': 'oll-corners',
+  '2look-pll-corners': 'pll',
+  '2look-pll-edges': 'pll',
+  'f2l-basic': 'iso',
+  'oll-full': 'oll-full',
+  'pll-full': 'pll',
+};
 
 const ollTwoLookEdges: RawAlgorithm[] = [
   {
@@ -38,33 +45,18 @@ const ollTwoLookEdges: RawAlgorithm[] = [
     name: tr('Dot (no edges)', 'Point (aucune arête)'),
     pattern: tr('No yellow edges oriented on top', 'Aucune arête jaune orientée en haut'),
     alg: "F (R U R' U') F' f (R U R' U') f'",
-    sticker: [
-      ['X', 'X', 'X'],
-      ['X', 'Y', 'X'],
-      ['X', 'X', 'X'],
-    ],
   },
   {
     id: 'oll-2l-edge-line',
     name: tr('Line', 'Ligne'),
     pattern: tr('Horizontal yellow bar across the top', 'Barre jaune horizontale sur le dessus'),
     alg: "F (R U R' U') F'",
-    sticker: [
-      ['X', 'X', 'X'],
-      ['Y', 'Y', 'Y'],
-      ['X', 'X', 'X'],
-    ],
   },
   {
     id: 'oll-2l-edge-l',
     name: tr('L-shape', 'L'),
     pattern: tr('Two adjacent edges form an L', 'Deux arêtes adjacentes forment un L'),
     alg: "f (R U R' U') f'",
-    sticker: [
-      ['X', 'Y', 'X'],
-      ['X', 'Y', 'Y'],
-      ['X', 'X', 'X'],
-    ],
   },
 ];
 
@@ -73,78 +65,43 @@ const ollTwoLookCorners: RawAlgorithm[] = [
     id: 'oll-2l-corner-sune',
     name: 'Sune',
     pattern: tr('One corner oriented, others form a Sune pattern', 'Un coin orienté, les autres en motif Sune'),
-    alg: "R U R' U R U2 R'",
-    sticker: [
-      ['Y', 'X', 'X'],
-      ['X', 'Y', 'X'],
-      ['Y', 'Y', 'X'],
-    ],
+    alg: "R U R' U R U2 R'", // one oriented corner at U[6], all edges oriented
   },
   {
     id: 'oll-2l-corner-antisune',
     name: 'Anti-Sune',
     pattern: tr('Mirror of Sune', 'Miroir du Sune'),
-    alg: "R U2 R' U' R U' R'",
-    sticker: [
-      ['X', 'X', 'Y'],
-      ['X', 'Y', 'X'],
-      ['Y', 'Y', 'X'],
-    ],
+    alg: "R U2 R' U' R U' R'", // one oriented corner at U[2]
   },
   {
     id: 'oll-2l-corner-headlights',
     name: 'Headlights',
     pattern: tr('Two corners on the same side oriented', 'Deux coins orientés du même côté'),
-    alg: "R2 D R' U2 R D' R' U2 R'",
-    sticker: [
-      ['Y', 'X', 'Y'],
-      ['X', 'Y', 'X'],
-      ['X', 'X', 'X'],
-    ],
+    alg: "R2 D R' U2 R D' R' U2 R'", // two adjacent corners on the back row
   },
   {
     id: 'oll-2l-corner-pi',
     name: tr('Pi (bowtie)', 'Pi (nœud papillon)'),
     pattern: tr('Two corners diagonally facing front/back', 'Deux coins en diagonale devant/derrière'),
-    alg: "R U2 R' U' R U R' U' R U' R'",
-    sticker: [
-      ['X', 'Y', 'X'],
-      ['X', 'Y', 'X'],
-      ['X', 'Y', 'X'],
-    ],
+    alg: "R U2 R' U' R U R' U' R U' R'", // 0 corners oriented (rely on description vs H)
   },
   {
     id: 'oll-2l-corner-u',
     name: tr('U (chameleon)', 'U (caméléon)'),
     pattern: tr('Two opposite corners oriented', 'Deux coins opposés orientés'),
-    alg: "F (R U R' U') (R U R' U') F'",
-    sticker: [
-      ['X', 'X', 'X'],
-      ['Y', 'Y', 'Y'],
-      ['X', 'Y', 'X'],
-    ],
+    alg: "F (R U R' U') (R U R' U') F'", // 2 opposite corners (TL + BR)
   },
   {
     id: 'oll-2l-corner-t',
     name: 'T',
     pattern: tr('Two adjacent corners oriented (back)', 'Deux coins adjacents orientés (arrière)'),
-    alg: "r U R' U' r' F R F'",
-    sticker: [
-      ['X', 'Y', 'X'],
-      ['X', 'Y', 'X'],
-      ['Y', 'X', 'Y'],
-    ],
+    alg: "r U R' U' r' F R F'", // 2 adjacent corners on right side
   },
   {
     id: 'oll-2l-corner-h',
     name: tr('H (cross)', 'H (croix)'),
     pattern: tr('No corners oriented, all edges form plus', 'Aucun coin orienté, toutes les arêtes forment une croix'),
-    alg: "F (R U R' U')(R U R' U')(R U R' U') F'",
-    sticker: [
-      ['X', 'Y', 'X'],
-      ['Y', 'Y', 'Y'],
-      ['X', 'Y', 'X'],
-    ],
+    alg: "F (R U R' U')(R U R' U')(R U R' U') F'", // 0 corners — same top-only pattern as Pi
   },
 ];
 
@@ -222,7 +179,7 @@ const f2lBasic: RawAlgorithm[] = [
 ];
 
 const ollFull: RawAlgorithm[] = [
-  { id: 'OLL01', name: 'Dot 01', alg: "(R U2)(R'2 F R F') U2 (R' F R F')" },
+  { id: 'OLL01', name: 'Dot 01', alg: "(R U2)(R2 F R F') U2 (R' F R F')" },
   { id: 'OLL02', name: 'Dot 02', alg: "F (R U R' U') F' f (R U R' U') f'" },
   { id: 'OLL03', name: 'Dot 03', alg: "f (R U R' U') f' U' F (R U R' U') F'" },
   { id: 'OLL04', name: 'Dot 04', alg: "f (R U R' U') f' U F (R U R' U') F'" },

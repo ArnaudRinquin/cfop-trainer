@@ -46,30 +46,6 @@ body {
   color: #08080a;
 }
 
-/* Cube net cells (algorithm visualizer) */
-.cube-cell {
-  width: 100%;
-  aspect-ratio: 1;
-  border-radius: 4px;
-  border: 1px solid rgba(0, 0, 0, 0.4);
-}
-.cube-cell.cube-W { background: #f5f5f5; }
-.cube-cell.cube-Y { background: #facc15; }
-.cube-cell.cube-R { background: #ef4444; }
-.cube-cell.cube-O { background: #f97316; }
-.cube-cell.cube-B { background: #3b82f6; }
-.cube-cell.cube-G { background: #22c55e; }
-.cube-cell.cube-X { background: #2a2a30; border-color: rgba(255, 255, 255, 0.04); }
-
-.face-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 3px;
-  padding: 3px;
-  background: rgba(0, 0, 0, 0.35);
-  border-radius: 6px;
-}
-
 /* Animated underline link */
 .link-underline {
   position: relative;

@@ -1,11 +1,13 @@
 import { useEffect, useState } from 'react';
 import type { Algorithm } from '~/data/algorithms';
+import type { CubeView } from '~/data/cube-configs';
 import { getAlgStatus, subscribe } from '~/lib/state';
 import AlgorithmCard from './AlgorithmCard';
 
 interface Props {
   algs: Algorithm[];
   title: string;
+  view: CubeView;
   labels: {
     learning: string;
     mastered: string;
@@ -16,7 +18,7 @@ interface Props {
   };
 }
 
-export default function AlgorithmGroup({ algs, title, labels }: Props) {
+export default function AlgorithmGroup({ algs, title, view, labels }: Props) {
   const [, force] = useState(0);
   useEffect(() => subscribe(() => force((n) => n + 1)), []);
 
@@ -57,6 +59,7 @@ export default function AlgorithmGroup({ algs, title, labels }: Props) {
           <AlgorithmCard
             key={alg.id}
             alg={alg}
+            view={view}
             learningLabel={labels.learning}
             masteredLabel={labels.mastered}
           />

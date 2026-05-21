@@ -5,7 +5,7 @@ import type { Locale } from '~/i18n/config';
 import { createT } from '~/i18n/strings';
 import { localePath } from '~/i18n/utils';
 import { getStageByLessonSlug, flatLessonSlugs } from '~/data/stages';
-import { getAlgorithmGroup, type AlgGroupKey } from '~/data/algorithms';
+import { ALG_GROUP_VIEW, getAlgorithmGroup, type AlgGroupKey } from '~/data/algorithms';
 import { getLessonsByLocale } from '~/lib/content';
 import LessonCompleteButton from './LessonCompleteButton';
 import AlgorithmGroup from './AlgorithmGroup';
@@ -131,6 +131,7 @@ const { Content } = await render(lesson);
                 client:load
                 algs={getAlgorithmGroup(key, locale)}
                 title={t(`algorithms.tabs.${key}` as 'algorithms.tabs.oll-full')}
+                view={ALG_GROUP_VIEW[key]}
                 labels={algLabels}
               />
             </div>

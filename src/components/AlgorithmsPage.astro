@@ -2,7 +2,7 @@
 import type { Locale } from '~/i18n/config';
 import { createT } from '~/i18n/strings';
 import { localePath } from '~/i18n/utils';
-import { ALG_GROUP_KEYS, getAlgorithmGroup, type AlgGroupKey } from '~/data/algorithms';
+import { ALG_GROUP_KEYS, ALG_GROUP_VIEW, getAlgorithmGroup, type AlgGroupKey } from '~/data/algorithms';
 import AlgorithmGroup from './AlgorithmGroup';
 
 interface Props {
@@ -40,6 +40,7 @@ const groupTitle = t(`algorithms.tabs.${activeTab}` as 'algorithms.tabs.oll-full
   client:load
   algs={algs}
   title={groupTitle}
+  view={ALG_GROUP_VIEW[activeTab]}
   labels={{
     learning: t('buttons.learning'),
     mastered: t('buttons.mastered'),

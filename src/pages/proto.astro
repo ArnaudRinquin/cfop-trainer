@@ -1,0 +1,74 @@
+---
+import Layout from '~/layouts/Layout.astro';
+import TwistyCube from '~/components/TwistyCube';
+import Cube from '~/components/Cube';
+import { invertMoves } from '~/lib/moves';
+
+const ollSamples = [
+  { id: 'oll-sune', alg: "R U R' U R U2 R'" },
+  { id: 'oll-dot', alg: "F (R U R' U') F' f (R U R' U') f'" },
+  { id: 'oll-pi', alg: "R U2 R' U' R U R' U' R U' R'" },
+];
+
+const pllSamples = [
+  { id: 'tperm', alg: "R U R' U' R' F R2 U' R' U' R U R' F'" },
+  { id: 'hperm', alg: 'M2 U M2 U2 M2 U M2' },
+];
+
+---
+
+<Layout locale="en" activeRoute="dashboard">
+  <section class="space-y-12">
+    <h1 class="font-display text-3xl text-ink-50">cubing.js renderer prototype</h1>
+
+    <div>
+      <h2 class="font-display text-xl text-ink-50 mb-4">OLL (2D-LL view)</h2>
+      <div class="flex gap-6 items-start flex-wrap">
+        {ollSamples.map((s) => (
+          <div class="text-center">
+            <TwistyCube
+              client:load
+              setupAlg={invertMoves(s.alg)}
+              alg={s.alg}
+              stickering="OLL"
+              visualization="experimental-2D-LL"
+              size={140}
+            />
+            <div class="text-ink-400 text-xs mt-2 font-mono">{s.id}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+
+    <div>
+      <h2 class="font-display text-xl text-ink-50 mb-4">PLL (2D-LL view)</h2>
+      <div class="flex gap-6 items-start flex-wrap">
+        {pllSamples.map((s) => (
+          <div class="text-center">
+            <TwistyCube
+              client:load
+              setupAlg={invertMoves(s.alg)}
+              alg={s.alg}
+              stickering="PLL"
+              visualization="experimental-2D-LL"
+              size={140}
+            />
+            <div class="text-ink-400 text-xs mt-2 font-mono">{s.id}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+
+    <div>
+      <h2 class="font-display text-xl text-ink-50 mb-4">Stage thumbnails (3D)</h2>
+      <div class="flex gap-6 items-start flex-wrap">
+        {['cross-solved', 'f2l-solved', 'oll-solved'].map((id) => (
+          <div class="text-center">
+            <Cube client:load id={id} size={140} />
+            <div class="text-ink-400 text-xs mt-2 font-mono">{id}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+</Layout>
