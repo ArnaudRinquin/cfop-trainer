@@ -9,7 +9,7 @@ order: 3
 import Cube from '~/components/Cube';
 
 <div style="display:flex;justify-content:center;margin:0 0 1.5rem 0;">
-  <Cube id="solved" size={200} client:load />
+  <Cube id="solved" size={200} client:only="react" />
 </div>
 
 A 3×3 has _three piece types_: 6 centers (1 sticker each), 12 edges (2 stickers each), and 8 corners (3 stickers each). Centers never move relative to each other — they define the color scheme.

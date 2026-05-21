@@ -9,7 +9,7 @@ order: 3
 import Cube from '~/components/Cube';
 
 <div style="display:flex;justify-content:center;margin:0 0 1.5rem 0;">
-  <Cube id="solved" size={200} client:load />
+  <Cube id="solved" size={200} client:only="react" />
 </div>
 
 Un 3×3 compte _trois types de pièces_ : 6 centres (1 sticker), 12 arêtes (2 stickers) et 8 coins (3 stickers). Les centres ne bougent jamais les uns par rapport aux autres — ils définissent le schéma de couleurs.
