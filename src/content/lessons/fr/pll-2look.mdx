@@ -1,18 +1,18 @@
 ---
 title: 'PLL en 2-look : 6 algorithmes'
-eyebrow: 'Leçon 10'
+eyebrow: 'Leçon 11'
 estimate: '30 min'
 goal: 'Terminer chaque résolution en deux étapes : coins puis arêtes.'
 practiceAlgs: '2look-pll-corners'
 practiceAlgs2: '2look-pll-edges'
-order: 10
+order: 11
 ---
 
 Comme l’OLL 2-look, un cheval de bataille : 6 algorithmes couvrent les 21 cas PLL. Permutez d’abord les coins (2 algos), puis les arêtes (4 algos).
 
 ### Permutation des coins
 
-Regardez les coins du dessus. Si deux coins adjacents partagent leur sticker non-jaune (« headlights »), c’est un A-perm. Sinon, c’est un E-perm (rare).
+Regardez les coins du dessus. Si deux coins adjacents partagent leur sticker non-jaune (« headlights »), placez ces phares derrière et faites un A-perm. Si aucun côté n’a de phares, faites un E-perm — cela arrive environ une résolution sur 6.
 
 ### Permutation des arêtes
 
