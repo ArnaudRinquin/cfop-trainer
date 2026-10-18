@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react';
-import { ao, bestSolve, deleteSolve, getState, subscribe, type Solve } from '~/lib/state';
+import { ao, bestSolve, deleteSolve, effectiveMs, setPenalty, type Solve } from '~/lib/state';
+import { useAppState } from '~/lib/useAppState';
 import { formatMs } from '~/lib/format';
 
 interface Strings {
@@ -8,6 +8,7 @@ interface Strings {
   empty: string;
   newSolveLabel: string;
   columns: { number: string; time: string; scramble: string; date: string };
+  delete: string;
   stats: { ao5: string; ao12: string; ao100: string; best: string; solves: string };
 }
 
@@ -23,15 +24,13 @@ const fmt = (ms: number | 'DNF' | null) => {
 };
 
 export default function SolvesView({ strings, locale }: Props) {
-  const [, force] = useState(0);
-  useEffect(() => subscribe(() => force((n) => n + 1)), []);
-
-  const { solves } = getState();
-  const best = bestSolve();
+  const state = useAppState();
+  const { solves } = state;
+  const best = bestSolve(state);
 
   return (
     <div>
-      <div className="flex items-baseline justify-between mb-8">
+      <div className="flex flex-wrap items-baseline justify-between gap-4 mb-8">
         <div>
           <h1 className="font-display text-3xl sm:text-4xl font-semibold text-ink-50">
             {strings.title}
@@ -50,10 +49,10 @@ export default function SolvesView({ strings, locale }: Props) {
       <div className="grid grid-cols-2 md:grid-cols-5 gap-3 mb-8">
         {[
           [strings.stats.solves, solves.length],
-          [strings.stats.best, best ? fmt(best.ms) : '—'],
-          [strings.stats.ao5, fmt(ao(5))],
-          [strings.stats.ao12, fmt(ao(12))],
-          [strings.stats.ao100, fmt(ao(100))],
+          [strings.stats.best, best ? fmt(effectiveMs(best)) : '—'],
+          [strings.stats.ao5, fmt(ao(5, state))],
+          [strings.stats.ao12, fmt(ao(12, state))],
+          [strings.stats.ao100, fmt(ao(100, state))],
         ].map(([label, value]) => (
           <div key={String(label)} className="card p-4">
             <div className="text-ink-500 text-[10px] uppercase tracking-widest">{label}</div>
@@ -75,12 +74,12 @@ export default function SolvesView({ strings, locale }: Props) {
           />
         </div>
       ) : (
-        <div className="card overflow-hidden">
-          <table className="w-full text-sm">
+        <div className="card overflow-x-auto">
+          <table className="w-full text-sm min-w-[560px]">
             <thead className="bg-white/[0.02] text-ink-500 uppercase tracking-widest text-[10px]">
               <tr>
                 <th className="text-left px-4 py-3 w-12">{strings.columns.number}</th>
-                <th className="text-left px-4 py-3 w-24">{strings.columns.time}</th>
+                <th className="text-left px-4 py-3 w-36">{strings.columns.time}</th>
                 <th className="text-left px-4 py-3">{strings.columns.scramble}</th>
                 <th className="text-left px-4 py-3 w-32">{strings.columns.date}</th>
                 <th className="px-4 py-3 w-12"></th>
@@ -88,12 +87,30 @@ export default function SolvesView({ strings, locale }: Props) {
             </thead>
             <tbody>
               {solves.map((s: Solve, i: number) => (
-                <tr key={s.ts} className="border-t border-white/5 hover:bg-white/[0.02]">
+                <tr key={`${s.ts}-${i}`} className="border-t border-white/5 hover:bg-white/[0.02]">
                   <td className="px-4 py-3 text-ink-500 font-mono text-xs">{solves.length - i}</td>
                   <td
                     className={`px-4 py-3 font-mono ${s.dnf ? 'text-red-400' : 'text-ink-100'}`}
                   >
-                    {s.dnf ? 'DNF' : fmt(s.ms)}
+                    {s.dnf ? 'DNF' : fmt(effectiveMs(s)) + (s.plus2 ? '+' : '')}
+                    <span className="ml-2 inline-flex gap-1 align-middle">
+                      {(['plus2', 'dnf'] as const).map((p) => {
+                        const on = p === 'dnf' ? !!s.dnf : !!s.plus2;
+                        return (
+                          <button
+                            key={p}
+                            type="button"
+                            aria-pressed={on}
+                            onClick={() => setPenalty(i, on ? null : p)}
+                            className={`text-[10px] px-1.5 py-0.5 rounded border ${
+                              on ? 'border-red-400/50 text-red-300' : 'border-white/10 text-ink-500 hover:text-ink-200'
+                            }`}
+                          >
+                            {p === 'dnf' ? 'DNF' : '+2'}
+                          </button>
+                        );
+                      })}
+                    </span>
                   </td>
                   <td className="px-4 py-3 font-mono text-ink-400 text-xs">
                     {s.scramble || ''}
@@ -104,8 +121,9 @@ export default function SolvesView({ strings, locale }: Props) {
                   <td className="px-4 py-3 text-right">
                     <button
                       type="button"
-                      onClick={() => deleteSolve(s.ts)}
-                      className="text-ink-500 hover:text-red-400 text-xs"
+                      onClick={() => deleteSolve(i)}
+                      aria-label={strings.delete}
+                      className="text-ink-500 hover:text-red-400 text-base w-8 h-8"
                     >
                       ×
                     </button>

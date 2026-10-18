@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react';
-import { ao, getState, isLessonCompleted, subscribe } from '~/lib/state';
+import { ao, isLessonCompleted } from '~/lib/state';
+import { useAppState } from '~/lib/useAppState';
 
 interface Props {
   totalLessons: number;
@@ -14,13 +14,12 @@ interface Props {
 }
 
 export default function DashboardProgress({ totalLessons, allLessonIds, labels }: Props) {
-  const [, force] = useState(0);
-  useEffect(() => subscribe(() => force((n) => n + 1)), []);
+  const state = useAppState();
 
-  const done = allLessonIds.filter((id) => isLessonCompleted(id)).length;
+  const done = allLessonIds.filter((id) => isLessonCompleted(id, state)).length;
   const pct = totalLessons ? Math.round((done / totalLessons) * 100) : 0;
-  const solves = getState().solves.length;
-  const a5 = ao(5);
+  const solves = state.solves.length;
+  const a5 = ao(5, state);
   const heroAo5 =
     a5 == null ? labels.noAo : a5 === 'DNF' ? 'DNF' : (a5 / 1000).toFixed(2) + 's';
 

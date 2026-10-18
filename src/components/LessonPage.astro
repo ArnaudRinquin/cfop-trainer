@@ -2,7 +2,7 @@
 import { render } from 'astro:content';
 import type { CollectionEntry } from 'astro:content';
 import type { Locale } from '~/i18n/config';
-import { createT } from '~/i18n/strings';
+import { createT, STRINGS } from '~/i18n/strings';
 import { localePath } from '~/i18n/utils';
 import { getStageByLessonSlug, flatLessonSlugs } from '~/data/stages';
 import { ALG_GROUP_VIEW, getAlgorithmGroup, type AlgGroupKey } from '~/data/algorithms';
@@ -48,6 +48,7 @@ const algLabels = {
   learningSuffix: t('algorithms.learning'),
   untouchedSuffix: t('algorithms.untouched'),
   algorithmsSuffix: t('algorithms.algorithmsSuffix'),
+  modal: STRINGS[locale].modal,
 };
 
 // Render the MDX body now so we can drop the HTML inside `.prose-cfop`.

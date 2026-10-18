@@ -1,15 +1,14 @@
-import { useEffect, useState } from 'react';
-import { isLessonCompleted, subscribe } from '~/lib/state';
+import { isLessonCompleted } from '~/lib/state';
+import { useAppState } from '~/lib/useAppState';
 
 interface Props {
   lessonIds: string[];
 }
 
 export default function StageProgress({ lessonIds }: Props) {
-  const [, force] = useState(0);
-  useEffect(() => subscribe(() => force((n) => n + 1)), []);
+  const state = useAppState();
 
-  const done = lessonIds.filter((id) => isLessonCompleted(id)).length;
+  const done = lessonIds.filter((id) => isLessonCompleted(id, state)).length;
   const total = lessonIds.length;
   const pct = total ? Math.round((done / total) * 100) : 0;
 

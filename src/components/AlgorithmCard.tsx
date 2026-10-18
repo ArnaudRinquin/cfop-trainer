@@ -1,16 +1,18 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import type { Algorithm } from '~/data/algorithms';
 import type { CubeView } from '~/data/cube-configs';
 import { invertMoves } from '~/lib/moves';
-import { getAlgStatus, setAlgStatus, subscribe } from '~/lib/state';
+import { getAlgStatus, setAlgStatus } from '~/lib/state';
+import { useAppState } from '~/lib/useAppState';
 import TwistyCube, { type StickeringKind, type VisualizationKind } from './TwistyCube';
-import AlgorithmModal from './AlgorithmModal';
+import AlgorithmModal, { type ModalStrings } from './AlgorithmModal';
 
 interface Props {
   alg: Algorithm;
   view: CubeView;
   learningLabel: string;
   masteredLabel: string;
+  modalLabels: ModalStrings;
 }
 
 function cubeOptions(view: CubeView): { stickering: StickeringKind; visualization: VisualizationKind; size: number } {
@@ -28,15 +30,9 @@ function cubeOptions(view: CubeView): { stickering: StickeringKind; visualizatio
   }
 }
 
-export default function AlgorithmCard({ alg, view, learningLabel, masteredLabel }: Props) {
-  const [status, setStatus] = useState(() => getAlgStatus(alg.id));
+export default function AlgorithmCard({ alg, view, learningLabel, masteredLabel, modalLabels }: Props) {
+  const status = getAlgStatus(alg.id, useAppState());
   const [open, setOpen] = useState(false);
-
-  useEffect(() => {
-    const unsub = subscribe(() => setStatus(getAlgStatus(alg.id)));
-    setStatus(getAlgStatus(alg.id));
-    return unsub;
-  }, [alg.id]);
 
   const toggle = (set: 'learning' | 'mastered') => {
     setAlgStatus(alg.id, status === set ? null : set);
@@ -53,7 +49,7 @@ export default function AlgorithmCard({ alg, view, learningLabel, masteredLabel 
           type="button"
           onClick={() => setOpen(true)}
           className="shrink-0 rounded-md focus:outline-none focus:ring-2 focus:ring-accent/40 hover:opacity-90 transition-opacity cursor-pointer"
-          aria-label={`Play ${alg.name}`}
+          aria-label={modalLabels.playLabel.replace('{name}', alg.name)}
         >
           <TwistyCube
             setupAlg={setup}
@@ -61,6 +57,7 @@ export default function AlgorithmCard({ alg, view, learningLabel, masteredLabel 
             stickering={stickering}
             visualization={visualization}
             size={size}
+            yellowTop
           />
         </button>
         <div className="flex-1 min-w-0">
@@ -99,7 +96,7 @@ export default function AlgorithmCard({ alg, view, learningLabel, masteredLabel 
           </div>
         </div>
       </div>
-      {open ? <AlgorithmModal alg={alg} onClose={() => setOpen(false)} /> : null}
+      {open ? <AlgorithmModal alg={alg} onClose={() => setOpen(false)} labels={modalLabels} /> : null}
     </div>
   );
 }

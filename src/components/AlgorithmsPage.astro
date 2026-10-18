@@ -1,6 +1,6 @@
 ---
 import type { Locale } from '~/i18n/config';
-import { createT } from '~/i18n/strings';
+import { createT, STRINGS } from '~/i18n/strings';
 import { localePath } from '~/i18n/utils';
 import { ALG_GROUP_KEYS, ALG_GROUP_VIEW, getAlgorithmGroup, type AlgGroupKey } from '~/data/algorithms';
 import AlgorithmGroup from './AlgorithmGroup';
@@ -48,5 +48,6 @@ const groupTitle = t(`algorithms.tabs.${activeTab}` as 'algorithms.tabs.oll-full
     learningSuffix: t('algorithms.learning'),
     untouchedSuffix: t('algorithms.untouched'),
     algorithmsSuffix: t('algorithms.algorithmsSuffix'),
+    modal: STRINGS[locale].modal,
   }}
 />

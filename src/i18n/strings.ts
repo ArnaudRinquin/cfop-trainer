@@ -52,6 +52,7 @@ type Strings = {
     subtitle: string;
     empty: string;
     columns: { number: string; time: string; scramble: string; date: string };
+    delete: string;
   };
   timer: {
     pressHold: string;
@@ -62,6 +63,21 @@ type Strings = {
     spaceHint: string;
     newScrambleHint: string;
     closeHint: string;
+    inspecting: string;
+    touchHint: string;
+    inspectionLabel: string;
+    close: string;
+  };
+  modal: {
+    reset: string;
+    prev: string;
+    play: string;
+    pause: string;
+    next: string;
+    end: string;
+    close: string;
+    hint: string;
+    playLabel: string;
   };
   language: { label: string };
   alerts: { confirmReset: string; importFailed: string };
@@ -116,7 +132,7 @@ const en: Strings = {
   algorithms: {
     title: 'Algorithms',
     description:
-      'Reference library and personal mastery tracker for every CFOP algorithm. Use this with the timer in another tab — drill until recognition becomes instant.',
+      'Reference library and personal mastery tracker for every CFOP algorithm. Click a case to watch it solved, then drill until recognition becomes instant.',
     algorithmsSuffix: 'algorithms',
     mastered: 'mastered',
     learning: 'learning',
@@ -136,9 +152,10 @@ const en: Strings = {
     subtitle: "All times you've logged with the timer.",
     empty: 'No solves yet. Hit the {kbd} key or the timer button to log your first solve.',
     columns: { number: '#', time: 'Time', scramble: 'Scramble', date: 'Date' },
+    delete: 'Delete solve',
   },
   timer: {
-    pressHold: 'Press & hold space',
+    pressHold: 'Hold space or touch to start',
     holding: 'Hold...',
     ready: 'Release to start',
     solving: 'Solving — press space to stop',
@@ -146,6 +163,21 @@ const en: Strings = {
     spaceHint: 'start/stop',
     newScrambleHint: 'new scramble',
     closeHint: 'close',
+    inspecting: 'Inspection — hold space to start',
+    touchHint: 'Touch and hold anywhere to start, tap to stop.',
+    inspectionLabel: 'Inspection',
+    close: 'Close timer',
+  },
+  modal: {
+    reset: 'Reset',
+    prev: 'Prev',
+    play: 'Play',
+    pause: 'Pause',
+    next: 'Next',
+    end: 'End',
+    close: 'Close',
+    hint: 'space play/pause · ← → step · esc close',
+    playLabel: 'Play {name}',
   },
   language: { label: 'Language' },
   alerts: {
@@ -199,7 +231,7 @@ const fr: Strings = {
   algorithms: {
     title: 'Algorithmes',
     description:
-      'Bibliothèque de référence et suivi personnel de maîtrise pour tous les algorithmes CFOP. Utilisez-la avec le chrono dans un autre onglet — drillez jusqu’à la reconnaissance instantanée.',
+      'Bibliothèque de référence et suivi personnel de maîtrise pour tous les algorithmes CFOP. Cliquez sur un cas pour le voir résolu, puis drillez jusqu’à la reconnaissance instantanée.',
     algorithmsSuffix: 'algorithmes',
     mastered: 'maîtrisés',
     learning: 'à apprendre',
@@ -219,9 +251,10 @@ const fr: Strings = {
     subtitle: 'Tous les temps enregistrés avec le chrono.',
     empty: 'Aucune résolution. Appuyez sur {kbd} ou cliquez sur le bouton chrono pour enregistrer la première.',
     columns: { number: 'N°', time: 'Temps', scramble: 'Mélange', date: 'Date' },
+    delete: 'Supprimer',
   },
   timer: {
-    pressHold: 'Maintenez Espace',
+    pressHold: 'Maintenez Espace ou touchez',
     holding: 'Maintenir…',
     ready: 'Relâchez pour démarrer',
     solving: 'En cours — appuyez sur Espace pour arrêter',
@@ -229,6 +262,21 @@ const fr: Strings = {
     spaceHint: 'démarrer/arrêter',
     newScrambleHint: 'nouveau mélange',
     closeHint: 'fermer',
+    inspecting: 'Inspection — maintenez Espace pour démarrer',
+    touchHint: 'Touchez et maintenez n’importe où pour démarrer, touchez pour arrêter.',
+    inspectionLabel: 'Inspection',
+    close: 'Fermer le chrono',
+  },
+  modal: {
+    reset: 'Début',
+    prev: 'Préc.',
+    play: 'Lecture',
+    pause: 'Pause',
+    next: 'Suiv.',
+    end: 'Fin',
+    close: 'Fermer',
+    hint: 'espace lecture/pause · ← → pas à pas · échap fermer',
+    playLabel: 'Lire {name}',
   },
   language: { label: 'Langue' },
   alerts: {

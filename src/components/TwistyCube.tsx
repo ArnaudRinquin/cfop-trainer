@@ -27,6 +27,8 @@ interface Props {
   size?: number;
   background?: 'none' | 'checkered';
   anchor?: 'start' | 'end';
+  // Hold the cube CFOP-style: yellow on top, white on bottom.
+  yellowTop?: boolean;
 }
 
 export interface TwistyCubeHandle {
@@ -46,6 +48,7 @@ type TwistyPlayerEl = HTMLElement & {
   experimentalSetupAnchor?: string;
   visualization?: string;
   experimentalStickering?: string;
+  experimentalStickeringMaskOrbits?: unknown;
   controlPanel?: string;
   background?: string;
   hintFacelets?: string;
@@ -75,6 +78,40 @@ function ensureTwisty() {
   return importedTwisty;
 }
 
+type StickeringMask = { orbits: Record<string, { pieces: unknown[] }> };
+const yellowTopMasks = new Map<StickeringKind, Promise<StickeringMask | null>>();
+
+// cubing.js stickering masks are keyed by piece identity, so after a `z2`
+// setup they would highlight the (now bottom) white pieces. Re-key the mask
+// so each piece gets the stickering of the position `z2` moves it to.
+function yellowTopMask(stickering: StickeringKind): Promise<StickeringMask | null> {
+  let cached = yellowTopMasks.get(stickering);
+  if (!cached) {
+    cached = (async () => {
+      const { cube3x3x3 } = await import('cubing/puzzles');
+      const mask = (await cube3x3x3.stickeringMask?.(stickering)) as StickeringMask | undefined;
+      if (!mask) return null;
+      const kpuzzle = await cube3x3x3.kpuzzle();
+      const z2 = kpuzzle.algToTransformation('z2').transformationData;
+      const orbits: StickeringMask['orbits'] = {};
+      for (const [name, orbit] of Object.entries(mask.orbits)) {
+        const perm = z2[name]?.permutation;
+        if (!perm) {
+          orbits[name] = orbit;
+          continue;
+        }
+        const pieces = new Array(orbit.pieces.length);
+        // After z2 from solved, position i holds piece perm[i].
+        perm.forEach((piece, i) => (pieces[piece] = orbit.pieces[i]));
+        orbits[name] = { pieces };
+      }
+      return { orbits };
+    })();
+    yellowTopMasks.set(stickering, cached);
+  }
+  return cached;
+}
+
 const TwistyCube = forwardRef<TwistyCubeHandle, Props>(function TwistyCube(
   {
     alg = '',
@@ -85,6 +122,7 @@ const TwistyCube = forwardRef<TwistyCubeHandle, Props>(function TwistyCube(
     size = 120,
     background = 'none',
     anchor = 'start',
+    yellowTop = false,
   },
   forwardedRef
 ) {
@@ -104,8 +142,9 @@ const TwistyCube = forwardRef<TwistyCubeHandle, Props>(function TwistyCube(
   useEffect(() => {
     const el = ref.current;
     if (!el || !ready) return;
+    let cancelled = false;
     el.puzzle = '3x3x3';
-    el.experimentalSetupAlg = setupAlg;
+    el.experimentalSetupAlg = yellowTop ? `z2 ${setupAlg}` : setupAlg;
     el.experimentalSetupAnchor = anchor;
     el.visualization = visualization;
     el.experimentalStickering = stickering;
@@ -113,7 +152,15 @@ const TwistyCube = forwardRef<TwistyCubeHandle, Props>(function TwistyCube(
     el.background = background;
     el.hintFacelets = 'none';
     el.alg = alg;
-  }, [ready, alg, setupAlg, visualization, stickering, controls, background, anchor]);
+    if (yellowTop && stickering !== 'full') {
+      yellowTopMask(stickering).then((mask) => {
+        if (!cancelled && mask) el.experimentalStickeringMaskOrbits = mask;
+      });
+    }
+    return () => {
+      cancelled = true;
+    };
+  }, [ready, alg, setupAlg, visualization, stickering, controls, background, anchor, yellowTop]);
 
   useImperativeHandle(
     forwardedRef,

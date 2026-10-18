@@ -3,12 +3,25 @@ import type { Algorithm } from '~/data/algorithms';
 import { invertMoves } from '~/lib/moves';
 import TwistyCube, { type TwistyCubeHandle } from './TwistyCube';
 
+export interface ModalStrings {
+  reset: string;
+  prev: string;
+  play: string;
+  pause: string;
+  next: string;
+  end: string;
+  close: string;
+  hint: string;
+  playLabel: string;
+}
+
 interface Props {
   alg: Algorithm;
   onClose: () => void;
+  labels: ModalStrings;
 }
 
-export default function AlgorithmModal({ alg, onClose }: Props) {
+export default function AlgorithmModal({ alg, onClose, labels }: Props) {
   const cubeRef = useRef<TwistyCubeHandle>(null);
   const [playing, setPlaying] = useState(false);
 
@@ -31,9 +44,12 @@ export default function AlgorithmModal({ alg, onClose }: Props) {
     document.addEventListener('keydown', onKey);
     const prev = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
+    // Lets the timer hotkey stand down while the modal is open.
+    document.body.dataset.modalOpen = '1';
     return () => {
       document.removeEventListener('keydown', onKey);
       document.body.style.overflow = prev;
+      delete document.body.dataset.modalOpen;
     };
   }, [onClose]);
 
@@ -53,6 +69,9 @@ export default function AlgorithmModal({ alg, onClose }: Props) {
 
   return (
     <div
+      role="dialog"
+      aria-modal="true"
+      aria-label={alg.name}
       className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm"
       onClick={onClose}
     >
@@ -63,7 +82,7 @@ export default function AlgorithmModal({ alg, onClose }: Props) {
         <button
           type="button"
           onClick={onClose}
-          aria-label="Close"
+          aria-label={labels.close}
           className="absolute top-3 right-3 text-ink-400 hover:text-ink-100 text-xl leading-none w-8 h-8 flex items-center justify-center"
         >
           ×
@@ -84,6 +103,7 @@ export default function AlgorithmModal({ alg, onClose }: Props) {
             stickering="full"
             controls="none"
             size={360}
+            yellowTop
           />
         </div>
 
@@ -93,35 +113,35 @@ export default function AlgorithmModal({ alg, onClose }: Props) {
             onClick={() => cubeRef.current?.jumpToStart()}
             className="px-3 py-1.5 text-sm rounded border border-white/10 text-ink-200 hover:bg-white/5"
           >
-            Reset
+            {labels.reset}
           </button>
           <button
             type="button"
             onClick={() => cubeRef.current?.stepBackward()}
             className="px-3 py-1.5 text-sm rounded border border-white/10 text-ink-200 hover:bg-white/5"
           >
-            Prev
+            {labels.prev}
           </button>
           <button
             type="button"
             onClick={() => cubeRef.current?.togglePlay()}
             className="px-4 py-1.5 text-sm rounded bg-accent text-ink-950 hover:bg-accent-hover font-medium min-w-[72px]"
           >
-            {playing ? 'Pause' : 'Play'}
+            {playing ? labels.pause : labels.play}
           </button>
           <button
             type="button"
             onClick={() => cubeRef.current?.stepForward()}
             className="px-3 py-1.5 text-sm rounded border border-white/10 text-ink-200 hover:bg-white/5"
           >
-            Next
+            {labels.next}
           </button>
           <button
             type="button"
             onClick={() => cubeRef.current?.jumpToEnd()}
             className="px-3 py-1.5 text-sm rounded border border-white/10 text-ink-200 hover:bg-white/5"
           >
-            End
+            {labels.end}
           </button>
         </div>
 
@@ -131,8 +151,8 @@ export default function AlgorithmModal({ alg, onClose }: Props) {
 
         {alg.note ? <div className="text-ink-500 text-xs mt-3 italic">{alg.note}</div> : null}
 
-        <div className="text-ink-500 text-[10px] mt-3 text-center">
-          space play/pause · ← → step · esc close
+        <div className="text-ink-500 text-[10px] mt-3 text-center hidden sm:block">
+          {labels.hint}
         </div>
       </div>
     </div>

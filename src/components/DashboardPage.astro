@@ -7,7 +7,7 @@ import { getLessonsByLocale } from '~/lib/content';
 import LessonCard from './LessonCard.astro';
 import StageProgress from './StageProgress';
 import DashboardProgress from './DashboardProgress';
-import NextLessonButton from './NextLessonButton';
+import HeroLesson from './HeroLesson';
 import TimerLauncher from './TimerLauncher';
 
 interface Props {
@@ -21,10 +21,13 @@ const stages = getStages(locale);
 const lessonMap = await getLessonsByLocale(locale);
 const allSlugs = flatLessonSlugs();
 
-// Pick the lesson to feature in the hero. Server can't know completion state,
-// so we default to the first lesson; the client-side button label adapts.
-const heroSlug = allSlugs[0];
-const heroLesson = heroSlug ? lessonMap.get(heroSlug) : undefined;
+// Hero candidates in curriculum order; the client picks the first incomplete one.
+const heroLessons = allSlugs.flatMap((slug) => {
+  const entry = lessonMap.get(slug);
+  return entry
+    ? [{ slug, title: entry.data.title, goal: entry.data.goal, href: localePath(`lesson/${slug}`, locale) }]
+    : [];
+});
 
 const totalLessons = allSlugs.length;
 ---
@@ -40,40 +43,14 @@ const totalLessons = allSlugs.length;
       <div class="text-ink-400 text-xs uppercase tracking-widest mb-3">
         {t('dashboard.pickUpWhere')}
       </div>
-      {
-        heroLesson && (
-          <Fragment>
-            <h1 class="font-display text-3xl sm:text-4xl font-semibold text-ink-50 mb-2 leading-tight">
-              {heroLesson.data.title}
-            </h1>
-            <p class="text-ink-300 max-w-2xl">{heroLesson.data.goal}</p>
-            <div class="flex flex-wrap gap-3 mt-6">
-              <NextLessonButton
-                client:load
-                lessonHref={localePath(`lesson/${heroSlug}`, locale)}
-                lessonId={heroSlug}
-                continueLabel={t('buttons.continue')}
-                reviewLabel={t('buttons.review')}
-              />
-              <TimerLauncher
-                client:load
-                variant="hero"
-                strings={{
-                  pressHold: t('timer.pressHold'),
-                  holding: t('timer.holding'),
-                  ready: t('timer.ready'),
-                  solving: t('timer.solving'),
-                  scrambleLabel: t('timer.scrambleLabel'),
-                  spaceHint: t('timer.spaceHint'),
-                  newScrambleHint: t('timer.newScrambleHint'),
-                  closeHint: t('timer.closeHint'),
-                  timerButton: t('buttons.practiceTimer'),
-                }}
-              />
-            </div>
-          </Fragment>
-        )
-      }
+      <HeroLesson
+        client:load
+        lessons={heroLessons}
+        continueLabel={t('buttons.continue')}
+        reviewLabel={t('buttons.review')}
+      >
+        <TimerLauncher client:load variant="hero" label={t('buttons.practiceTimer')} />
+      </HeroLesson>
     </div>
   </div>
 

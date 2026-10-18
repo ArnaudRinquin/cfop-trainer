@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react';
-import { isLessonCompleted, setLessonStatus, subscribe } from '~/lib/state';
+import { isLessonCompleted, setLessonStatus } from '~/lib/state';
+import { useAppState } from '~/lib/useAppState';
 
 interface Props {
   lessonId: string;
@@ -8,12 +8,7 @@ interface Props {
 }
 
 export default function LessonCompleteButton({ lessonId, markLabel, completedLabel }: Props) {
-  const [completed, setCompleted] = useState(false);
-
-  useEffect(() => {
-    setCompleted(isLessonCompleted(lessonId));
-    return subscribe(() => setCompleted(isLessonCompleted(lessonId)));
-  }, [lessonId]);
+  const completed = isLessonCompleted(lessonId, useAppState());
 
   return (
     <button

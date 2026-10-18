@@ -1,8 +1,9 @@
-import { useEffect, useState } from 'react';
 import type { Algorithm } from '~/data/algorithms';
 import type { CubeView } from '~/data/cube-configs';
-import { getAlgStatus, subscribe } from '~/lib/state';
+import { getAlgStatus } from '~/lib/state';
+import { useAppState } from '~/lib/useAppState';
 import AlgorithmCard from './AlgorithmCard';
+import type { ModalStrings } from './AlgorithmModal';
 
 interface Props {
   algs: Algorithm[];
@@ -15,16 +16,16 @@ interface Props {
     learningSuffix: string;
     untouchedSuffix: string;
     algorithmsSuffix: string;
+    modal: ModalStrings;
   };
 }
 
 export default function AlgorithmGroup({ algs, title, view, labels }: Props) {
-  const [, force] = useState(0);
-  useEffect(() => subscribe(() => force((n) => n + 1)), []);
+  const state = useAppState();
 
   const total = algs.length;
-  const mastered = algs.filter((a) => getAlgStatus(a.id) === 'mastered').length;
-  const learning = algs.filter((a) => getAlgStatus(a.id) === 'learning').length;
+  const mastered = algs.filter((a) => getAlgStatus(a.id, state) === 'mastered').length;
+  const learning = algs.filter((a) => getAlgStatus(a.id, state) === 'learning').length;
   const pct = total ? Math.round((mastered / total) * 100) : 0;
 
   return (
@@ -62,6 +63,7 @@ export default function AlgorithmGroup({ algs, title, view, labels }: Props) {
             view={view}
             learningLabel={labels.learning}
             masteredLabel={labels.mastered}
+            modalLabels={labels.modal}
           />
         ))}
       </div>

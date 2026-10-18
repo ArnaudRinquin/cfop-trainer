@@ -25,8 +25,8 @@ const homeHref = localePath('', locale);
 ---
 
 <header class="border-b border-white/5 backdrop-blur-md bg-ink-950/60 sticky top-0 z-30">
-  <div class="max-w-7xl mx-auto px-5 sm:px-8 py-3 flex items-center justify-between gap-6">
-    <a href={homeHref} class="flex items-center gap-2.5 group">
+  <div class="max-w-7xl mx-auto px-4 sm:px-8 py-3 flex flex-wrap items-center justify-between gap-x-6 gap-y-2">
+    <a href={homeHref} class="flex items-center gap-2.5 group shrink-0">
       <div class="w-8 h-8 rounded-md overflow-hidden grid grid-cols-2 grid-rows-2 gap-px bg-black/60 p-px">
         <div class="bg-cube-yellow"></div>
         <div class="bg-cube-red"></div>
@@ -34,11 +34,11 @@ const homeHref = localePath('', locale);
         <div class="bg-cube-blue"></div>
       </div>
       <div class="font-display font-semibold tracking-tight text-ink-50">CFOP</div>
-      <div class="text-ink-500 text-xs uppercase tracking-widest hidden sm:block">
+      <div class="text-ink-500 text-xs uppercase tracking-widest hidden lg:block">
         {t('app.tagline')}
       </div>
     </a>
-    <nav class="flex items-center gap-1">
+    <nav class="order-last w-full sm:order-none sm:w-auto flex items-center gap-1 overflow-x-auto -mx-1 px-1">
       {
         navItems.map((item) => (
           <a
@@ -50,7 +50,7 @@ const homeHref = localePath('', locale);
         ))
       }
     </nav>
-    <div class="flex items-center gap-3">
+    <div class="flex items-center gap-3 shrink-0">
       <HeaderStats
         client:load
         labels={{ ao5: t('stats.ao5'), ao12: t('stats.ao12'), best: t('stats.best') }}
@@ -59,17 +59,7 @@ const homeHref = localePath('', locale);
       <TimerLauncher
         client:load
         variant="header"
-        strings={{
-          pressHold: t('timer.pressHold'),
-          holding: t('timer.holding'),
-          ready: t('timer.ready'),
-          solving: t('timer.solving'),
-          scrambleLabel: t('timer.scrambleLabel'),
-          spaceHint: t('timer.spaceHint'),
-          newScrambleHint: t('timer.newScrambleHint'),
-          closeHint: t('timer.closeHint'),
-          timerButton: t('buttons.timer'),
-        }}
+        label={t('buttons.timer')}
       />
     </div>
   </div>

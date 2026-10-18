@@ -4,6 +4,7 @@ import type { Locale } from '~/i18n/config';
 import { createT } from '~/i18n/strings';
 import Header from '~/components/Header.astro';
 import Footer from '~/components/Footer.astro';
+import TimerHost from '~/components/TimerHost';
 
 interface Props {
   locale: Locale;
@@ -46,5 +47,22 @@ const pageDescription = description ?? t('app.footer');
       </main>
       <Footer locale={locale} />
     </div>
+    <TimerHost
+      client:only="react"
+      strings={{
+        pressHold: t('timer.pressHold'),
+        holding: t('timer.holding'),
+        ready: t('timer.ready'),
+        solving: t('timer.solving'),
+        inspecting: t('timer.inspecting'),
+        scrambleLabel: t('timer.scrambleLabel'),
+        spaceHint: t('timer.spaceHint'),
+        touchHint: t('timer.touchHint'),
+        newScrambleHint: t('timer.newScrambleHint'),
+        closeHint: t('timer.closeHint'),
+        inspectionLabel: t('timer.inspectionLabel'),
+        close: t('timer.close'),
+      }}
+    />
   </body>
 </html>

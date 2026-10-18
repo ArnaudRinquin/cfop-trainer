@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react';
-import { ao, bestSolve, subscribe } from '~/lib/state';
+import { ao, bestSolve, effectiveMs } from '~/lib/state';
+import { useAppState } from '~/lib/useAppState';
 import { formatAo, formatMs } from '~/lib/format';
 
 interface Props {
@@ -7,15 +7,14 @@ interface Props {
 }
 
 export default function HeaderStats({ labels }: Props) {
-  const [, force] = useState(0);
-  useEffect(() => subscribe(() => force((n) => n + 1)), []);
+  const state = useAppState();
 
-  const a5 = ao(5);
-  const a12 = ao(12);
-  const best = bestSolve();
+  const a5 = ao(5, state);
+  const a12 = ao(12, state);
+  const best = bestSolve(state);
 
   return (
-    <div className="hidden md:flex items-center gap-4 text-xs">
+    <div className="hidden xl:flex items-center gap-4 text-xs">
       <div className="text-right">
         <div className="text-ink-500 uppercase tracking-widest text-[10px]">{labels.ao5}</div>
         <div className="font-mono text-ink-100">{formatAo(a5)}</div>
@@ -26,7 +25,7 @@ export default function HeaderStats({ labels }: Props) {
       </div>
       <div className="text-right">
         <div className="text-ink-500 uppercase tracking-widest text-[10px]">{labels.best}</div>
-        <div className="font-mono text-ink-100">{best ? formatMs(best.ms) : '—'}</div>
+        <div className="font-mono text-ink-100">{best ? formatMs(effectiveMs(best)) : '—'}</div>
       </div>
     </div>
   );
