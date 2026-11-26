@@ -5,6 +5,9 @@ import tailwindcss from '@tailwindcss/vite';
 
 export default defineConfig({
   site: 'https://cfop-trainer.netlify.app',
+  // Astro 7 defaults to 'jsx' whitespace handling, which drops inter-element
+  // whitespace (e.g. "CFOP Trainer" -> "CFOPTrainer"). Keep Astro 5 behaviour.
+  compressHTML: true,
   integrations: [react(), mdx()],
   image: {
     service: { entrypoint: 'astro/assets/services/noop' },
